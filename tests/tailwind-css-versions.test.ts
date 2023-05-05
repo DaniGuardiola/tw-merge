@@ -4,12 +4,14 @@ test('supports Tailwind CSS v3.3 features', () => {
     expect(twMerge('text-red text-lg/7 text-lg/8')).toBe('text-red text-lg/8')
     expect(
         twMerge(
-            'start-0 start-1',
-            'end-0 end-1',
-            'ps-0 ps-1 pe-0 pe-1',
-            'ms-0 ms-1 me-0 me-1',
-            'rounded-s-sm rounded-s-md rounded-e-sm rounded-e-md',
-            'rounded-ss-sm rounded-ss-md rounded-ee-sm rounded-ee-md',
+            [
+                'start-0 start-1',
+                'end-0 end-1',
+                'ps-0 ps-1 pe-0 pe-1',
+                'ms-0 ms-1 me-0 me-1',
+                'rounded-s-sm rounded-s-md rounded-e-sm rounded-e-md',
+                'rounded-ss-sm rounded-ss-md rounded-ee-sm rounded-ee-md',
+            ].join(' '),
         ),
     ).toBe(
         'start-1 end-1 ps-1 pe-1 ms-1 me-1 rounded-s-md rounded-e-md rounded-ss-md rounded-ee-md',
