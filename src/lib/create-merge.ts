@@ -5,7 +5,6 @@ import { EMPTY } from './shared'
 import { normalizeContext } from './utils'
 
 type ParsedRule = [RegExp, Handler]
-type ParsedRuleSet = ParsedRule[]
 
 export type CreateMergeConfig = {
     cacheSize?: number

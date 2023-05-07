@@ -93,19 +93,6 @@ twMerge('p-5 p-2 my-non-tailwind-class p-4') // → 'my-non-tailwind-class p-4'
 twMerge('text-red text-secret-sauce') // → 'text-secret-sauce'
 ```
 
-## Ignores falsy values
-
-```ts
-twMerge('some-class', undefined, null, false, 0) // → 'some-class'
-```
-
-## Supports arrays and nested arrays
-
-```ts
-twMerge('some-class', [undefined, ['another-class', false]], ['third-class'])
-// → 'some-class another-class third-class'
-```
-
 Why no object support? [Read here](https://github.com/dcastil/tailwind-merge/discussions/137#discussioncomment-3481605).
 
 ---
