@@ -18,9 +18,7 @@ export const VALUE_REGEXP = `(?:-(?<value>.+?)${TRAILING_SLASH_REGEXP})?`
 // simple rule
 // -----------
 
-export type SimpleHandlerOptions = {
-    byType?: boolean
-}
+export type SimpleHandlerOptions = { byType?: boolean }
 
 export function createSimpleHandler({ byType }: SimpleHandlerOptions = {}) {
     const simpleHandler: Handler<Record<string, Partial<Record<'number' | 'other', boolean>>>> = (
@@ -97,7 +95,10 @@ export function createCardinalHandler({ overrides = {}, byType }: CardinalHandle
 }
 
 export type CardinalRuleOptions = {
-    /** Whether the direction is dash-separated (e.g. `border-t-2`) */
+    /**
+     * Whether the direction is dash-separated (e.g. `border-t-2`)
+     * @default true
+     */
     dash?: boolean
     /** The allowed directions (e.g. `t|r|b|l`) */
     dir?: string
@@ -105,7 +106,7 @@ export type CardinalRuleOptions = {
 
 export function cardinalRule(
     target: string,
-    { dash, dir, overrides, byType }: CardinalRuleOptions = {},
+    { dash = true, dir, overrides, byType }: CardinalRuleOptions = {},
 ): Rule {
     const _target = `${target}(?:${dash ? '-' : ''}(?<direction>${dir}))?`
     const regExp = `^${CONTEXT_REGEXP}${_target}${VALUE_REGEXP}$`
@@ -129,9 +130,7 @@ export function createUniqueHandler() {
     return uniqueValueHandler
 }
 
-export type UniqueRuleOptions = {
-    prefix?: string
-}
+export type UniqueRuleOptions = { prefix?: string }
 
 export function uniqueRule(values: string, { prefix }: UniqueRuleOptions = {}): Rule {
     const _prefix = prefix ? `${prefix}-` : ''

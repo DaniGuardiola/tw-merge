@@ -56,10 +56,9 @@ const SCROLL_SNAP_ALIGN = 'start|end|center|none'
 const SCROLL_SNAP_STOP = 'normal|always'
 const SCROLL_SNAP_TYPE = 'none|x|y|both|mandatory|proximity'
 
-// TODO: font-family
-// TODO: font-variant-numeric seems tricky with overrides
 // TODO: text-<something>/20 should override line-height (leading)
-// TODO: text-decoration-thickness (conflicts with text-decoration-color)
+// TODO: ^ same with opacities and other trailing slash values
+// TODO: text-decoration-thickness (conflicts with text-decoration-color and there are custom values: auto and from-font)
 // TODO: background-image
 // TODO: outline style supports no value
 export function tailwind(): RuleSet {
@@ -84,18 +83,10 @@ export function tailwind(): RuleSet {
         }),
         ...uniqueRules([FLEX_DIRECTION, FLEX_WRAP], { prefix: 'flex' }),
         conflictRule({ flex: 'basis|grow|shrink' }),
-        uniqueRule(ALIGN_CONTENT, { prefix: 'content' }),
-        uniqueRule(LIST_STYLE_POSITION, { prefix: 'list' }),
         ...uniqueRules([TEXT_ALIGN, FONT_AND_SHADOW_SIZE], { prefix: 'text' }),
-        uniqueRule(TEXT_DECORATION_STYLE, { prefix: 'decoration' }),
-        uniqueRule(TEXT_OVERFLOW),
         ...uniqueRules([BG_ATTACHMENT, BG_AND_OBJECT_POSITION, BG_REPEAT, BG_SIZE], {
             prefix: 'bg',
         }),
-        uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'border' }),
-        uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'divide' }),
-        uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'outline' }),
-        uniqueRule(FONT_AND_SHADOW_SIZE, { prefix: 'shadow' }),
         ...uniqueRules([SCROLL_BEHAVIOR, SCROLL_SNAP_ALIGN, SCROLL_SNAP_STOP, SCROLL_SNAP_TYPE], {
             prefix: 'scroll',
         }),
@@ -111,33 +102,51 @@ export function tailwind(): RuleSet {
             FVN_FRACTION,
             TEXT_DECORATION,
             TEXT_TRANSFORM,
+            TEXT_OVERFLOW,
         ]),
+        uniqueRule(ALIGN_CONTENT, { prefix: 'content' }),
+        uniqueRule(LIST_STYLE_POSITION, { prefix: 'list' }),
+        uniqueRule(TEXT_DECORATION_STYLE, { prefix: 'decoration' }),
+        uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'border' }),
+        uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'divide' }),
+        uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'outline' }),
+        uniqueRule(FONT_AND_SHADOW_SIZE, { prefix: 'shadow' }),
+        uniqueRule(FONT_WEIGHT, { prefix: 'font' }),
         // -----------------------------------------------------------------
         simpleRule(
             'accent|align|animate|aspect|auto-cols|auto-rows|backdrop-blur|backdrop-brightness|backdrop-contrast|backdrop-grayscale|backdrop-hue-rotate|backdrop-invert|backdrop-opacity|backdrop-saturate|backdrop-sepia|basis|bg-blend|bg-clip|bg-origin|bg|blur|border-collapse|border-spacing|bottom|box-decoration|box|break-after|break-before|break-inside|break|brightness|caption|caret|clear|col-end|col-start|columns|col|content|contrast|cursor|decoration|delay|divide-x-reverse|divide-x|divide-y-reverse|divide-y|divide|drop-shadow|duration|ease|end|fill|flex|float|grayscale|grid-cols|grid-flow|grid-rows|grow|hue-rotate|hyphens|h|indent|invert|items|justify-items|justify-self|justify|leading|left|line-clamp|list-image|list|max-h|max-w|min-h|min-w|mix-blend|opacity|order|origin|outline-offset|place-content|place-items|place-self|pointer-events|resize|right|ring-inset|rotate|row-end|row-start|row|saturate|select|self|sepia|shadow|shrink|skew-x|skew-y|space-x-reverse|space-x|space-y-reverse|space-y|start|table|top|touch|tracking|transition|translate-x|translate-y|underline-offset|whitespace|will-change|w|z',
         ),
-        uniqueRule(OBJECT_FIT, { prefix: 'object' }),
-        uniqueRule(BG_AND_OBJECT_POSITION, { prefix: 'object' }),
-        ...cardinalRules('overflow|overscroll', {
+        simpleRule('text|outline|ring-offset|ring|from|via|to|stroke|font', { byType: true }),
+        cardinalRule('border', {
+            dir: 't|r|b|l|x|y|s|e',
+            overrides: {
+                t: [EMPTY, 'y'],
+                r: [EMPTY, 'x'],
+                b: [EMPTY, 'y'],
+                l: [EMPTY, 'x'],
+                x: [EMPTY],
+                y: [EMPTY],
+                s: [EMPTY],
+                e: [EMPTY],
+            },
+            byType: true,
+        }),
+        cardinalRule('rounded', {
+            dir: 't|r|b|l|tl|tr|br|bl|s|e|ss|se|es|ee',
+            overrides: {
+                t: [EMPTY, 'tl', 'tr'],
+                r: [EMPTY, 'tr', 'br'],
+                b: [EMPTY, 'br', 'bl'],
+                l: [EMPTY, 'bl', 'tl'],
+                ss: [EMPTY, 'e', 's'],
+                se: [EMPTY, 'e', 's'],
+                es: [EMPTY, 'e', 's'],
+                ee: [EMPTY, 'e', 's'],
+            },
+        }),
+        ...cardinalRules('gap|inset|scale|overflow|overscroll', {
             dir: 'x|y',
             overrides: { x: [EMPTY], y: [EMPTY] },
-            dash: true,
-        }),
-        cardinalRule('inset', {
-            dir: 'x|y',
-            overrides: {
-                x: [EMPTY],
-                y: [EMPTY],
-            },
-            dash: true,
-        }),
-        ...cardinalRules('gap|scale', {
-            dir: 'x|y',
-            overrides: {
-                x: [EMPTY],
-                y: [EMPTY],
-            },
-            dash: true,
         }),
         ...cardinalRules('p|m|scroll-m|scroll-p', {
             dir: 't|r|b|l|x|y|s|e',
@@ -151,38 +160,9 @@ export function tailwind(): RuleSet {
                 s: [EMPTY, 'x'],
                 e: [EMPTY, 'x'],
             },
+            dash: false,
         }),
-        uniqueRule(FONT_WEIGHT, { prefix: 'font' }),
-        simpleRule('text|outline|ring-offset|ring|from|via|to|stroke', { byType: true }),
-        cardinalRule('rounded', {
-            dir: 't|r|b|l|tl|tr|br|bl|s|e|ss|se|es|ee',
-            overrides: {
-                t: [EMPTY, 'tl', 'tr'],
-                r: [EMPTY, 'tr', 'br'],
-                b: [EMPTY, 'br', 'bl'],
-                l: [EMPTY, 'bl', 'tl'],
-                ss: [EMPTY, 'e', 's'],
-                se: [EMPTY, 'e', 's'],
-                es: [EMPTY, 'e', 's'],
-                ee: [EMPTY, 'e', 's'],
-            },
-            dash: true,
-        }),
-        cardinalRule('border', {
-            dir: 't|r|b|l|x|y|s|e',
-            overrides: {
-                t: [EMPTY, 'y'],
-                r: [EMPTY, 'x'],
-                b: [EMPTY, 'y'],
-                l: [EMPTY, 'x'],
-                x: [EMPTY],
-                y: [EMPTY],
-                s: [EMPTY],
-                e: [EMPTY],
-            },
-            dash: true,
-            byType: true,
-        }),
+        ...uniqueRules([OBJECT_FIT, BG_AND_OBJECT_POSITION], { prefix: 'object' }),
         arbitraryRule(),
     ]
 }

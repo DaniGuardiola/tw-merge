@@ -20,11 +20,12 @@
 
 # Improvement opportunities
 
--   [ ] always default
--   [ ] always trailing slash
+-   [x] always default
+-   [x] always trailing slash
+-   [x] `simpleRules`: instead of creating a rule for each target, do a single one with a mega-regex
 -   [ ] universal cardinal rule setup
--   [ ] `simpleRules`: instead of creating a rule for each target, do a single one with a mega-regex
 
 # Publishing
 
 -   [ ] update publishing scripts
+-   [ ] publish
