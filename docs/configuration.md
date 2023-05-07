@@ -234,6 +234,33 @@ const twMerge2 = extendTailwindMerge(withMagic, withMoreMagic)
 const twMerge3 = createTailwindMerge(() => ({  … }), withMagic, withMoreMagic)
 ```
 
+## Ordering
+
+```js
+function orderByPriority(_targets) {
+    const targets = [..._targets]
+    let seenTargets = []
+    let i = 0
+    while (i < targets.length) {
+        const target = targets[i]
+        const seenIndex = seenTargets.findIndex((t) => target.startsWith(t))
+        if (seenIndex >= 0) {
+            const [t] = targets.splice(i, 1)
+            targets.splice(seenIndex, 0, t)
+            return orderByPriority(targets)
+        }
+        seenTargets.push(target)
+        i++
+        continue
+    }
+    return targets
+}
+
+function orderTargets(targets) {
+    return orderByPriority(targets.sort())
+}
+```
+
 ---
 
 Next: [Recipes](./recipes.md)

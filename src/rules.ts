@@ -13,6 +13,7 @@ export type RuleSet = Rule[]
 
 export const CONTEXT_REGEXP = '(?<context>.*%SEPARATOR%!?|!?)?-?%PREFIX%'
 export const TRAILING_SLASH_REGEXP = '(?:\\/[0-9]+)?'
+export const VALUE_REGEXP = `(?:-(?<value>.+?)${TRAILING_SLASH_REGEXP})?`
 
 // simple rule
 // -----------
@@ -43,17 +44,10 @@ export function createSimpleHandler({ byType }: SimpleHandlerOptions = {}) {
     return simpleHandler
 }
 
-export type SimpleRuleOptions = {
-    /** Whether the rule supports a default value (no value, e.g. `border`) */
-    def?: boolean
-    /** Whether the rule supports a trailing slash (e.g. `text-red-500/50`) */
-    slash?: boolean
-} & SimpleHandlerOptions
+export type SimpleRuleOptions = SimpleHandlerOptions
 
-export function simpleRule(target: string, { def, slash, byType }: SimpleRuleOptions = {}): Rule {
-    const value = def ? '(?:-(?<value>.*))?' : '-(?<value>.+)'
-    const trailingSlash = slash ? TRAILING_SLASH_REGEXP : ''
-    const regExp = `^${CONTEXT_REGEXP}(?<target>${target})${value}${trailingSlash}$`
+export function simpleRule(target: string, { byType }: SimpleRuleOptions = {}): Rule {
+    const regExp = `^${CONTEXT_REGEXP}(?<target>${target})${VALUE_REGEXP}$`
     return [regExp, createSimpleHandler({ byType })]
 }
 
@@ -103,24 +97,18 @@ export function createCardinalHandler({ overrides = {}, byType }: CardinalHandle
 }
 
 export type CardinalRuleOptions = {
-    /** Whether the rule supports a default value (no value, e.g. `border`) */
-    def?: boolean
     /** Whether the direction is dash-separated (e.g. `border-t-2`) */
     dash?: boolean
     /** The allowed directions (e.g. `t|r|b|l`) */
     dir?: string
-    /** Whether the rule supports a trailing slash (e.g. `text-red-500/50`) */
-    slash?: boolean
 } & CardinalHandlerOptions
 
 export function cardinalRule(
     target: string,
-    { def, dash, dir, slash, overrides, byType }: CardinalRuleOptions = {},
+    { dash, dir, overrides, byType }: CardinalRuleOptions = {},
 ): Rule {
-    const value = def ? '(?:-(?<value>.*))?' : '-(?<value>.+)'
     const _target = `${target}(?:${dash ? '-' : ''}(?<direction>${dir}))?`
-    const trailingSlash = slash ? TRAILING_SLASH_REGEXP : ''
-    const regExp = `^${CONTEXT_REGEXP}${_target}${value}${trailingSlash}$`
+    const regExp = `^${CONTEXT_REGEXP}${_target}${VALUE_REGEXP}$`
     return [regExp, createCardinalHandler({ overrides, byType })]
 }
 
@@ -143,14 +131,11 @@ export function createUniqueHandler() {
 
 export type UniqueRuleOptions = {
     prefix?: string
-    /** Whether the rule supports a trailing slash (e.g. `text-red-500/50`) */
-    slash?: boolean
 }
 
-export function uniqueRule(values: string, { prefix, slash }: UniqueRuleOptions = {}): Rule {
+export function uniqueRule(values: string, { prefix }: UniqueRuleOptions = {}): Rule {
     const _prefix = prefix ? `${prefix}-` : ''
-    const trailingSlash = slash ? TRAILING_SLASH_REGEXP : ''
-    const regExp = `^${CONTEXT_REGEXP}${_prefix}(${values})${trailingSlash}$`
+    const regExp = `^${CONTEXT_REGEXP}${_prefix}(${values})${TRAILING_SLASH_REGEXP}$`
     return [regExp, createUniqueHandler()]
 }
 
@@ -227,7 +212,6 @@ export function conflictRule(targets: ConflictRuleTargets): Rule {
     const overridableUtilities = Object.values(targets).join('|').split('|')
     const matchingClasses = [...overridingUtilities, ...overridableUtilities]
     const utility = `(?<utility>${matchingClasses.join('|')})`
-    const value = '(?:-(?<value>.*))?'
-    const regExp = `^${CONTEXT_REGEXP}${utility}${value}$`
+    const regExp = `^${CONTEXT_REGEXP}${utility}${VALUE_REGEXP}$`
     return [regExp, createConflictHandler(targets)]
 }

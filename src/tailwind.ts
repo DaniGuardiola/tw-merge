@@ -86,7 +86,7 @@ export function tailwind(): RuleSet {
         conflictRule({ flex: 'basis|grow|shrink' }),
         uniqueRule(ALIGN_CONTENT, { prefix: 'content' }),
         uniqueRule(LIST_STYLE_POSITION, { prefix: 'list' }),
-        uniqueRule(TEXT_ALIGN, { prefix: 'text' }),
+        ...uniqueRules([TEXT_ALIGN, FONT_AND_SHADOW_SIZE], { prefix: 'text' }),
         uniqueRule(TEXT_DECORATION_STYLE, { prefix: 'decoration' }),
         uniqueRule(TEXT_OVERFLOW),
         ...uniqueRules([BG_ATTACHMENT, BG_AND_OBJECT_POSITION, BG_REPEAT, BG_SIZE], {
@@ -99,10 +99,6 @@ export function tailwind(): RuleSet {
         ...uniqueRules([SCROLL_BEHAVIOR, SCROLL_SNAP_ALIGN, SCROLL_SNAP_STOP, SCROLL_SNAP_TYPE], {
             prefix: 'scroll',
         }),
-        // these rules are ordered as in the Tailwind docs (more or less)
-        simpleRule(
-            'aspect|columns|break-after|break-before|break-inside|break|box-decoration|box|float|clear|start|end|top|right|bottom|left|z|basis|flex|order|grid-cols|col-start|col-end|col|grid-rows|row-start|row-end|row|grid-flow|auto-cols|auto-rows|justify-items|justify-self|justify|items|self|place-content|place-items|place-self|space-x-reverse|space-y-reverse|space-x|space-y|w|min-w|max-w|h|min-h|max-h|tracking|line-clamp|leading|list-image-none|list|underline-offset|indent|align|whitespace|hyphens|content|bg-clip|bg-origin|bg-blend|bg|divide-x-reverse|divide-y-reverse|divide-x|divide-y|outline-offset|ring-inset|shadow|opacity|mix-blend|brightness|contrast|hue-rotate|saturate|backdrop-brightness|backdrop-contrast|backdrop-hue-rotate|border-collapse|border-spacing|table|caption|duration|ease|delay|animate|rotate|translate-x|translate-y|skew-x|skew-y|origin|accent|cursor|caret|pointer-events|touch|select|will-change|fill',
-        ),
         ...uniqueRules([
             DISPLAY,
             ISOLATION,
@@ -116,6 +112,10 @@ export function tailwind(): RuleSet {
             TEXT_DECORATION,
             TEXT_TRANSFORM,
         ]),
+        // -----------------------------------------------------------------
+        simpleRule(
+            'accent|align|animate|aspect|auto-cols|auto-rows|backdrop-blur|backdrop-brightness|backdrop-contrast|backdrop-grayscale|backdrop-hue-rotate|backdrop-invert|backdrop-opacity|backdrop-saturate|backdrop-sepia|basis|bg-blend|bg-clip|bg-origin|bg|blur|border-collapse|border-spacing|bottom|box-decoration|box|break-after|break-before|break-inside|break|brightness|caption|caret|clear|col-end|col-start|columns|col|content|contrast|cursor|decoration|delay|divide-x-reverse|divide-x|divide-y-reverse|divide-y|divide|drop-shadow|duration|ease|end|fill|flex|float|grayscale|grid-cols|grid-flow|grid-rows|grow|hue-rotate|hyphens|h|indent|invert|items|justify-items|justify-self|justify|leading|left|line-clamp|list-image|list|max-h|max-w|min-h|min-w|mix-blend|opacity|order|origin|outline-offset|place-content|place-items|place-self|pointer-events|resize|right|ring-inset|rotate|row-end|row-start|row|saturate|select|self|sepia|shadow|shrink|skew-x|skew-y|space-x-reverse|space-x|space-y-reverse|space-y|start|table|top|touch|tracking|transition|translate-x|translate-y|underline-offset|whitespace|will-change|w|z',
+        ),
         uniqueRule(OBJECT_FIT, { prefix: 'object' }),
         uniqueRule(BG_AND_OBJECT_POSITION, { prefix: 'object' }),
         ...cardinalRules('overflow|overscroll', {
@@ -131,10 +131,6 @@ export function tailwind(): RuleSet {
             },
             dash: true,
         }),
-        simpleRule(
-            'grow|shrink|blur|drop-shadow|grayscale|invert|sepia|backdrop-blur|backdrop-grayscale|backdrop-invert|backdrop-opacity|backdrop-saturate|backdrop-sepia|transition|resize',
-            { def: true },
-        ),
         ...cardinalRules('gap|scale', {
             dir: 'x|y',
             overrides: {
@@ -156,13 +152,8 @@ export function tailwind(): RuleSet {
                 e: [EMPTY, 'x'],
             },
         }),
-        uniqueRule(FONT_AND_SHADOW_SIZE, { prefix: 'text', slash: true }),
         uniqueRule(FONT_WEIGHT, { prefix: 'font' }),
-        simpleRule('text|outline|ring-offset|ring|from|via|to|stroke', {
-            byType: true,
-            slash: true,
-        }),
-        simpleRule('decoration|divide', { slash: true }),
+        simpleRule('text|outline|ring-offset|ring|from|via|to|stroke', { byType: true }),
         cardinalRule('rounded', {
             dir: 't|r|b|l|tl|tr|br|bl|s|e|ss|se|es|ee',
             overrides: {
@@ -176,7 +167,6 @@ export function tailwind(): RuleSet {
                 ee: [EMPTY, 'e', 's'],
             },
             dash: true,
-            def: true,
         }),
         cardinalRule('border', {
             dir: 't|r|b|l|x|y|s|e',
@@ -191,9 +181,7 @@ export function tailwind(): RuleSet {
                 e: [EMPTY],
             },
             dash: true,
-            def: true,
             byType: true,
-            slash: true,
         }),
         arbitraryRule(),
     ]
