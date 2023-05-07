@@ -1,8 +1,7 @@
 import { createMerge } from './lib/create-merge'
-import { DEFAULT_TAILWIND_RULES } from './tailwind-rules'
+import { tailwind } from './tailwind'
 
-export const twMerge = createMerge(DEFAULT_TAILWIND_RULES)
-export { createMerge, DEFAULT_TAILWIND_RULES as DEFAULT_TAILWIND_CONFIG }
+export { createMerge, tailwind }
 export {
     arbitraryRule,
     cardinalRule,
@@ -13,3 +12,5 @@ export {
     uniqueRule,
     uniqueRules,
 } from './rules'
+
+export const twMerge = createMerge(tailwind())

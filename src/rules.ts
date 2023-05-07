@@ -8,10 +8,10 @@ export type Handler<T = any> = (
     data: { context: MatchContext; value: MatchValue; match: RegExpMatchArray },
 ) => boolean | 'continue' // keep class | continue to next rule
 
-export type Rule = [RegExp, Handler]
+export type Rule = [string, Handler]
 export type RuleSet = Rule[]
 
-export const CONTEXT_REGEXP = '(?<context>.*:!?|!?)?'
+export const CONTEXT_REGEXP = '(?<context>.*%SEPARATOR%!?|!?)?-?%PREFIX%'
 export const TRAILING_SLASH_REGEXP = '(?:\\/[0-9]+)?'
 
 // simple rule
@@ -51,7 +51,7 @@ export type SimpleRuleOptions = {
 export function simpleRule(target: string, { def, slash, byType }: SimpleRuleOptions = {}): Rule {
     const value = def ? '(?:-(?<value>.*))?' : '-(?<value>.+)'
     const trailingSlash = slash ? TRAILING_SLASH_REGEXP : ''
-    const regExp = new RegExp(`^${CONTEXT_REGEXP}-?${target}${value}${trailingSlash}$`)
+    const regExp = `^${CONTEXT_REGEXP}${target}${value}${trailingSlash}$`
     return [regExp, createSimpleHandler({ byType })]
 }
 
@@ -123,7 +123,7 @@ export function cardinalRule(
     const value = def ? '(?:-(?<value>.*))?' : '-(?<value>.+)'
     const _target = `${target}(?:${dash ? '-' : ''}(?<direction>${dir}))?`
     const trailingSlash = slash ? TRAILING_SLASH_REGEXP : ''
-    const regExp = new RegExp(`^${CONTEXT_REGEXP}-?${_target}${value}${trailingSlash}$`)
+    const regExp = `^${CONTEXT_REGEXP}${_target}${value}${trailingSlash}$`
     return [regExp, createCardinalHandler({ overrides, byType })]
 }
 
@@ -153,7 +153,7 @@ export type UniqueRuleOptions = {
 export function uniqueRule(values: string, { prefix, slash }: UniqueRuleOptions = {}): Rule {
     const _prefix = prefix ? `${prefix}-` : ''
     const trailingSlash = slash ? TRAILING_SLASH_REGEXP : ''
-    const regExp = new RegExp(`^${CONTEXT_REGEXP}${_prefix}(${values})${trailingSlash}$`)
+    const regExp = `^${CONTEXT_REGEXP}${_prefix}(${values})${trailingSlash}$`
     return [regExp, createUniqueHandler()]
 }
 
@@ -187,10 +187,7 @@ export function createArbitraryHandler() {
 }
 
 export function arbitraryRule(): Rule {
-    return [
-        new RegExp(`^${CONTEXT_REGEXP}\\[(?<property>.+?):(?<value>.*)\\]$`),
-        createArbitraryHandler(),
-    ]
+    return [`^${CONTEXT_REGEXP}\\[(?<property>.+?):(?<value>.*)\\]$`, createArbitraryHandler()]
 }
 
 // conflict rule
@@ -236,6 +233,6 @@ export function conflictRule(targets: ConflictRuleTargets): Rule {
     const matchingClasses = [...overridingUtilities, ...overridableUtilities]
     const utility = `(?<utility>${matchingClasses.join('|')})`
     const value = '(?:-(?<value>.*))?'
-    const regExp = new RegExp(`^${CONTEXT_REGEXP}-?${utility}${value}$`)
+    const regExp = `^${CONTEXT_REGEXP}${utility}${value}$`
     return [regExp, createConflictHandler(targets)]
 }

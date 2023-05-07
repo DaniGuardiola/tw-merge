@@ -1,9 +1,7 @@
-import { extendTailwindMerge } from '../src'
+import { createMerge, tailwind } from '../src'
 
 test('single character separator working correctly', () => {
-    const twMerge = extendTailwindMerge({
-        separator: '_',
-    })
+    const twMerge = createMerge(tailwind(), { separator: '_' })
 
     expect(twMerge('block hidden')).toBe('hidden')
 
@@ -18,9 +16,7 @@ test('single character separator working correctly', () => {
 })
 
 test('multiple character separator working correctly', () => {
-    const twMerge = extendTailwindMerge({
-        separator: '__',
-    })
+    const twMerge = createMerge(tailwind(), { separator: '__' })
 
     expect(twMerge('block hidden')).toBe('hidden')
 

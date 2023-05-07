@@ -1,9 +1,9 @@
 # Tailwind ruleset
 
--   [ ] prefix
--   [ ] separator
--   [ ] ruleset generator from Tailwind theme
+-   [x] prefix
+-   [x] separator
 -   [ ] add remaining rules
+-   [ ] ruleset generator from Tailwind theme
 
 # Testing and benchmarking
 
@@ -23,6 +23,7 @@
 -   [ ] always default
 -   [ ] always trailing slash
 -   [ ] universal cardinal rule setup
+-   [ ] `simpleRules`: instead of creating a rule for each target, do a single one with a mega-regex
 
 # Publishing
 

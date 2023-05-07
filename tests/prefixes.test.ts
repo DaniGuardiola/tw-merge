@@ -1,9 +1,7 @@
-import { extendTailwindMerge } from '../src'
+import { createMerge, tailwind } from '../src'
 
 test('prefix working correctly', () => {
-    const twMerge = extendTailwindMerge({
-        prefix: 'tw-',
-    })
+    const twMerge = createMerge(tailwind(), { prefix: 'tw' })
 
     expect(twMerge('tw-block tw-hidden')).toBe('tw-hidden')
     expect(twMerge('block hidden')).toBe('block hidden')
