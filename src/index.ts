@@ -8,7 +8,6 @@ export {
     cardinalRules,
     conflictRule,
     simpleRule,
-    simpleRules,
     uniqueRule,
     uniqueRules,
 } from './rules'

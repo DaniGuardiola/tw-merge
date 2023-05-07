@@ -1,7 +1,7 @@
 import {
     RuleSet,
     uniqueRule,
-    simpleRules,
+    simpleRule,
     cardinalRules,
     cardinalRule,
     arbitraryRule,
@@ -100,7 +100,7 @@ export function tailwind(): RuleSet {
             prefix: 'scroll',
         }),
         // these rules are ordered as in the Tailwind docs (more or less)
-        ...simpleRules(
+        simpleRule(
             'aspect|columns|break-after|break-before|break-inside|break|box-decoration|box|float|clear|start|end|top|right|bottom|left|z|basis|flex|order|grid-cols|col-start|col-end|col|grid-rows|row-start|row-end|row|grid-flow|auto-cols|auto-rows|justify-items|justify-self|justify|items|self|place-content|place-items|place-self|space-x-reverse|space-y-reverse|space-x|space-y|w|min-w|max-w|h|min-h|max-h|tracking|line-clamp|leading|list-image-none|list|underline-offset|indent|align|whitespace|hyphens|content|bg-clip|bg-origin|bg-blend|bg|divide-x-reverse|divide-y-reverse|divide-x|divide-y|outline-offset|ring-inset|shadow|opacity|mix-blend|brightness|contrast|hue-rotate|saturate|backdrop-brightness|backdrop-contrast|backdrop-hue-rotate|border-collapse|border-spacing|table|caption|duration|ease|delay|animate|rotate|translate-x|translate-y|skew-x|skew-y|origin|accent|cursor|caret|pointer-events|touch|select|will-change|fill',
         ),
         ...uniqueRules([
@@ -131,7 +131,7 @@ export function tailwind(): RuleSet {
             },
             dash: true,
         }),
-        ...simpleRules(
+        simpleRule(
             'grow|shrink|blur|drop-shadow|grayscale|invert|sepia|backdrop-blur|backdrop-grayscale|backdrop-invert|backdrop-opacity|backdrop-saturate|backdrop-sepia|transition|resize',
             { def: true },
         ),
@@ -158,11 +158,11 @@ export function tailwind(): RuleSet {
         }),
         uniqueRule(FONT_AND_SHADOW_SIZE, { prefix: 'text', slash: true }),
         uniqueRule(FONT_WEIGHT, { prefix: 'font' }),
-        ...simpleRules('text|outline|ring-offset|ring|from|via|to|stroke', {
+        simpleRule('text|outline|ring-offset|ring|from|via|to|stroke', {
             byType: true,
             slash: true,
         }),
-        ...simpleRules('decoration|divide', { slash: true }),
+        simpleRule('decoration|divide', { slash: true }),
         cardinalRule('rounded', {
             dir: 't|r|b|l|tl|tr|br|bl|s|e|ss|se|es|ee',
             overrides: {

@@ -58,7 +58,6 @@ export function createMerge(
                     const handler = rule[1]
 
                     const memory = (memoryStore[ruleI] ??= {}) as RuleMemory
-                    memory[context] ??= {}
 
                     const result = handler(memory, { context, value, match })
                     const keepClass = result === true

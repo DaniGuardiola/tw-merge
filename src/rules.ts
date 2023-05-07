@@ -22,19 +22,21 @@ export type SimpleHandlerOptions = {
 }
 
 export function createSimpleHandler({ byType }: SimpleHandlerOptions = {}) {
-    const simpleHandler: Handler<Record<'number' | 'other', { done?: boolean }>> = (
+    const simpleHandler: Handler<Record<string, Partial<Record<'number' | 'other', boolean>>>> = (
         memory,
-        { context, value },
+        { context, value, match },
     ) => {
+        const target = match.groups?.target!
         const type = byType && isNumericValue(value) ? 'number' : 'other'
-        memory[context]![type] ??= {}
-        const mem = memory[context]![type]!
+        memory[context] ??= {}
+        memory[context]![target] ??= {}
+        const mem = memory[context]![target]!
 
         // seen before
-        if (mem.done) return false
+        if (mem[type]) return false
 
         // never seen
-        mem.done = true
+        mem[type] = true
         return true
     }
 
@@ -51,13 +53,8 @@ export type SimpleRuleOptions = {
 export function simpleRule(target: string, { def, slash, byType }: SimpleRuleOptions = {}): Rule {
     const value = def ? '(?:-(?<value>.*))?' : '-(?<value>.+)'
     const trailingSlash = slash ? TRAILING_SLASH_REGEXP : ''
-    const regExp = `^${CONTEXT_REGEXP}${target}${value}${trailingSlash}$`
+    const regExp = `^${CONTEXT_REGEXP}(?<target>${target})${value}${trailingSlash}$`
     return [regExp, createSimpleHandler({ byType })]
-}
-
-export function simpleRules(targets: string, options?: SimpleRuleOptions) {
-    const _targets = targets.split('|')
-    return _targets.map((target) => simpleRule(target, options))
 }
 
 // cardinal rule
@@ -75,18 +72,18 @@ const OVERRIDERS = Symbol('overriders')
 export function createCardinalHandler({ overrides = {}, byType }: CardinalHandlerOptions = {}) {
     const overriders = new Set(Object.values(overrides).flat())
     const cardinalHandler: Handler<
-        Record<Direction, Partial<Record<'number' | 'other', { done?: boolean }>>> & {
+        Partial<Record<Direction, Partial<Record<'number' | 'other', boolean>>>> & {
             [OVERRIDERS]?: Partial<Record<'number' | 'other', Set<string | typeof EMPTY>>>
         }
     > = (memory, { context, value, match }) => {
         const direction = match.groups?.direction || EMPTY
         const type = byType && isNumericValue(value) ? 'number' : 'other'
+        memory[context] ??= {}
         memory[context]![direction] ??= {}
-        memory[context]![direction]![type] ??= {}
-        const mem = memory[context]![direction]![type]!
+        const mem = memory[context]![direction]!
 
         // seen before
-        if (mem.done) return false
+        if (mem[type]) return false
 
         // apply override
         memory[context]![OVERRIDERS] ??= {}
@@ -98,7 +95,7 @@ export function createCardinalHandler({ overrides = {}, byType }: CardinalHandle
         if (overriders.has(direction)) memOverriders.add(direction)
 
         // never seen
-        mem.done = true
+        mem[type] = true
         return true
     }
 
@@ -136,9 +133,9 @@ export function cardinalRules(targets: string, options?: CardinalRuleOptions) {
 // -----------
 
 export function createUniqueHandler() {
-    const uniqueValueHandler: Handler<{ done?: boolean }> = (memory, { context }) => {
-        if (memory[context]!.done) return false
-        memory[context]!.done = true
+    const uniqueValueHandler: Handler<boolean> = (memory, { context }) => {
+        if (memory[context]) return false
+        memory[context] = true
         return true
     }
     return uniqueValueHandler
@@ -204,11 +201,9 @@ export function createConflictHandler(targets: ConflictRuleTargets) {
         }),
     )
 
-    const conflictHandler: Handler<Record<string, boolean>> = (
-        memory,
-        { context, value, match },
-    ) => {
+    const conflictHandler: Handler<Record<string, boolean>> = (memory, { context, match }) => {
         const utility = match.groups?.utility!
+        memory[context] ??= {}
         const mem = memory[context]!
 
         // is overridable utility and overriding utility has been seen
