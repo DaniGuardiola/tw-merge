@@ -1,4 +1,4 @@
-import { createMerge } from './lib/merge'
+import { createMerge } from './lib/create-merge'
 import { DEFAULT_TAILWIND_RULES } from './tailwind-rules'
 
 export const twMerge = createMerge(DEFAULT_TAILWIND_RULES)
