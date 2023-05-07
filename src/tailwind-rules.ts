@@ -1,5 +1,5 @@
 import {
-    Config,
+    RuleSet,
     uniqueRule,
     simpleRules,
     cardinalRules,
@@ -8,7 +8,7 @@ import {
     uniqueRules,
     conflictRule,
 } from './rules'
-import { EMPTY } from './shared'
+import { EMPTY } from './lib/shared'
 
 const DISPLAY =
     'block|inline-block|inline-flex|inline-table|inline-grid|inline|flex|table-caption|table-cell|table-column-group|table-column|table-footer-group|table-header-group|table-row-group|table-row|table|flow-root|grid|contents|list-item|hidden'
@@ -63,7 +63,7 @@ const SCROLL_SNAP_TYPE = 'none|x|y|both|mandatory|proximity'
 // TODO: background-image
 // TODO: outline style supports no value
 // STOPPED AFTER: border style
-export const DEFAULT_TAILWIND_CONFIG: Config = [
+export const DEFAULT_TAILWIND_RULES: RuleSet = [
     // these rules are at the top because they need to run before others
     conflictRule({
         'inset-x': 'left|right',
@@ -193,16 +193,12 @@ export const DEFAULT_TAILWIND_CONFIG: Config = [
         byType: true,
         slash: true,
     }),
-    // ------------------
-    ...simpleRules('stroke|grayscale|cursor', { byType: true }),
-    ...simpleRules('scale'),
-    // ------------------
     arbitraryRule(),
 ]
 
 // only modern "outer" styles
 // - omitted legacy properties: float, clear
-export const DEFAULT_TAILWIND_CONFIG_LITE: Config = [
+export const DEFAULT_TAILWIND_RULES_LITE: RuleSet = [
     // these rules are at the top because they need to run before others
     uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'border' }),
     // these rules are ordered as in the Tailwind docs (more or less)
@@ -280,7 +276,7 @@ export const DEFAULT_TAILWIND_CONFIG_LITE: Config = [
 
 /** A very small selection of modern "outer" style utilities
  * that are likely to conflict. */
-export const DEFAULT_TAILWIND_CONFIG_ULTRALITE: Config = [
+export const DEFAULT_TAILWIND_RULES_ULTRALITE: RuleSet = [
     ...simpleRules('aspect|w|h|opacity|cursor'),
     ...uniqueRules([DISPLAY, POSITION]),
 ]

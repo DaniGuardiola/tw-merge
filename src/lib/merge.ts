@@ -1,8 +1,9 @@
-import { Config } from './rules'
-import { EMPTY, RuleMemory } from './shared'
+import { RuleMemory, RuleSet } from '../rules'
+
+import { EMPTY } from './shared'
 import { normalizeContext } from './utils'
 
-export function createMerge(config: Config) {
+export function createMerge(config: RuleSet) {
     function merge(className: string) {
         const memoryStore: unknown[] = []
 

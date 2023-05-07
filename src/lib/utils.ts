@@ -1,7 +1,5 @@
 import { EMPTY, MatchValue } from './shared'
 
-export const CONTEXT_REGEXP = '(?<context>.*:!?|!?)?'
-
 export function isNumericValue(value: MatchValue) {
     if (value === EMPTY) return true
     const arbitraryValue = value.match(/^\[(.*)\]$/)?.[1]

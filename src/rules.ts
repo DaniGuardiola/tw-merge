@@ -1,15 +1,23 @@
-import { EMPTY, Handler } from './shared'
-import { CONTEXT_REGEXP, isNumericValue } from './utils'
+import { EMPTY, MatchContext, MatchValue } from './lib/shared'
+import { isNumericValue } from './lib/utils'
+
+export type RuleMemory<T = any> = Record<string | symbol, T>
+
+export type Handler<T = any> = (
+    memory: RuleMemory<T>,
+    data: { context: MatchContext; value: MatchValue; match: RegExpMatchArray },
+) => boolean | 'continue' // keep class | continue to next rule
 
 export type Rule = [RegExp, Handler]
-export type Config = Rule[]
+export type RuleSet = Rule[]
 
+export const CONTEXT_REGEXP = '(?<context>.*:!?|!?)?'
 export const TRAILING_SLASH_REGEXP = '(?:\\/[0-9]+)?'
 
 // simple rule
 // -----------
 
-type SimpleHandlerOptions = {
+export type SimpleHandlerOptions = {
     byType?: boolean
 }
 
@@ -188,9 +196,9 @@ export function arbitraryRule(): Rule {
 // conflict rule
 // -------------
 
-type ConflictTargets = Record<string, string>
+export type ConflictRuleTargets = Record<string, string>
 
-export function createConflictHandler(targets: ConflictTargets) {
+export function createConflictHandler(targets: ConflictRuleTargets) {
     const overridableMap: Record<string, string[]> = {}
     Object.entries(targets).forEach(([overridingUtility, overridableUtilities]) =>
         overridableUtilities.split('|').forEach((value) => {
@@ -222,7 +230,7 @@ export function createConflictHandler(targets: ConflictTargets) {
     return conflictHandler
 }
 
-export function conflictRule(targets: ConflictTargets): Rule {
+export function conflictRule(targets: ConflictRuleTargets): Rule {
     const overridingUtilities = Object.keys(targets)
     const overridableUtilities = Object.values(targets).join('|').split('|')
     const matchingClasses = [...overridingUtilities, ...overridableUtilities]
