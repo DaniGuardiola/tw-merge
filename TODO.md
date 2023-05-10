@@ -6,6 +6,7 @@
 -   [ ] complete ruleset generator
 -   [ ] add smaller tailwind rulesets
 -   [ ] add remaining rules
+-   [ ] add filesystem target
 
 # Testing and benchmarking
 
