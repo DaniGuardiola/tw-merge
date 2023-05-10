@@ -130,11 +130,13 @@ export function createUniqueHandler() {
     return uniqueValueHandler
 }
 
-export type UniqueRuleOptions = { prefix?: string }
+export type UniqueRuleOptions = { prefix?: string; def?: boolean }
 
-export function uniqueRule(values: string, { prefix }: UniqueRuleOptions = {}): Rule {
+export function uniqueRule(values: string, { prefix, def }: UniqueRuleOptions = {}): Rule {
     const _prefix = prefix ? `${prefix}-` : ''
-    const regExp = `^${CONTEXT_REGEXP}${_prefix}(${values})${TRAILING_SLASH_REGEXP}$`
+    const utility = `(${values})${TRAILING_SLASH_REGEXP}`
+    const body = def ? `(?:${prefix}|${_prefix}${utility})` : `${_prefix}${utility}`
+    const regExp = `^${CONTEXT_REGEXP}${body}$`
     return [regExp, createUniqueHandler()]
 }
 

@@ -2,14 +2,16 @@
 
 -   [x] prefix
 -   [x] separator
+-   [x] ruleset generator from Tailwind theme
+-   [ ] complete ruleset generator
+-   [ ] add smaller tailwind rulesets
 -   [ ] add remaining rules
--   [ ] ruleset generator from Tailwind theme
 
 # Testing and benchmarking
 
+-   [x] enable prefixes and separators tests
 -   [ ] create comparison benchmark with tailwing-merge
 -   [ ] create "test creator" for existing tailwing-merge and utility merge
--   [ ] enable prefixes and separators tests
 
 # Chores
 
@@ -17,6 +19,7 @@
 -   [ ] update README
 -   [ ] update other docs (e.g. CONTRIBUTING.md)
 -   [ ] figure out the license
+-   [ ] JSDoc in everything
 
 # Improvement opportunities
 

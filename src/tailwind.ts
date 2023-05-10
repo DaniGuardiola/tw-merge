@@ -59,8 +59,6 @@ const SCROLL_SNAP_TYPE = 'none|x|y|both|mandatory|proximity'
 // TODO: text-<something>/20 should override line-height (leading)
 // TODO: ^ same with opacities and other trailing slash values
 // TODO: text-decoration-thickness (conflicts with text-decoration-color and there are custom values: auto and from-font)
-// TODO: background-image
-// TODO: outline style supports no value
 export function tailwind(): RuleSet {
     return [
         // these rules are at the top because they need to run before others
@@ -80,6 +78,8 @@ export function tailwind(): RuleSet {
             'tabular-nums': 'normal-nums',
             'diagonal-fractions': 'normal-nums',
             'stacked-fractons': 'normal-nums',
+            'bg-gradient': 'bg-none',
+            'bg-none': 'bg-gradient',
         }),
         ...uniqueRules([FLEX_DIRECTION, FLEX_WRAP], { prefix: 'flex' }),
         conflictRule({ flex: 'basis|grow|shrink' }),
@@ -109,12 +109,12 @@ export function tailwind(): RuleSet {
         uniqueRule(TEXT_DECORATION_STYLE, { prefix: 'decoration' }),
         uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'border' }),
         uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'divide' }),
-        uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'outline' }),
+        uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: 'outline', def: true }),
         uniqueRule(FONT_AND_SHADOW_SIZE, { prefix: 'shadow' }),
         uniqueRule(FONT_WEIGHT, { prefix: 'font' }),
         // -----------------------------------------------------------------
         simpleRule(
-            'accent|align|animate|aspect|auto-cols|auto-rows|backdrop-blur|backdrop-brightness|backdrop-contrast|backdrop-grayscale|backdrop-hue-rotate|backdrop-invert|backdrop-opacity|backdrop-saturate|backdrop-sepia|basis|bg-blend|bg-clip|bg-origin|bg|blur|border-collapse|border-spacing|bottom|box-decoration|box|break-after|break-before|break-inside|break|brightness|caption|caret|clear|col-end|col-start|columns|col|content|contrast|cursor|decoration|delay|divide-x-reverse|divide-x|divide-y-reverse|divide-y|divide|drop-shadow|duration|ease|end|fill|flex|float|grayscale|grid-cols|grid-flow|grid-rows|grow|hue-rotate|hyphens|h|indent|invert|items|justify-items|justify-self|justify|leading|left|line-clamp|list-image|list|max-h|max-w|min-h|min-w|mix-blend|opacity|order|origin|outline-offset|place-content|place-items|place-self|pointer-events|resize|right|ring-inset|rotate|row-end|row-start|row|saturate|select|self|sepia|shadow|shrink|skew-x|skew-y|space-x-reverse|space-x|space-y-reverse|space-y|start|table|top|touch|tracking|transition|translate-x|translate-y|underline-offset|whitespace|will-change|w|z',
+            'accent|align|animate|aspect|auto-cols|auto-rows|backdrop-blur|backdrop-brightness|backdrop-contrast|backdrop-grayscale|backdrop-hue-rotate|backdrop-invert|backdrop-opacity|backdrop-saturate|backdrop-sepia|basis|bg-blend|bg-clip|bg-origin|bg-none|bg-gradient|bg|blur|border-collapse|border-spacing|bottom|box-decoration|box|break-after|break-before|break-inside|break|brightness|caption|caret|clear|col-end|col-start|columns|col|content|contrast|cursor|decoration|delay|divide-x-reverse|divide-x|divide-y-reverse|divide-y|divide|drop-shadow|duration|ease|end|fill|flex|float|grayscale|grid-cols|grid-flow|grid-rows|grow|hue-rotate|hyphens|h|indent|invert|items|justify-items|justify-self|justify|leading|left|line-clamp|list-image|list|max-h|max-w|min-h|min-w|mix-blend|opacity|order|origin|outline-offset|place-content|place-items|place-self|pointer-events|resize|right|ring-inset|rotate|row-end|row-start|row|saturate|select|self|sepia|shadow|shrink|skew-x|skew-y|space-x-reverse|space-x|space-y-reverse|space-y|start|table|top|touch|tracking|transition|translate-x|translate-y|underline-offset|whitespace|will-change|w|z',
         ),
         simpleRule('text|outline|ring-offset|ring|from|via|to|stroke|font', { byType: true }),
         cardinalRule('border', {

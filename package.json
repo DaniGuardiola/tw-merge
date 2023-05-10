@@ -50,7 +50,8 @@
         "size": "size-limit",
         "preversion": "if [ -n \"$DANYS_MACHINE\" ]; then git checkout main && git pull; fi",
         "version": "zx scripts/update-readme.js",
-        "postversion": "if [ -n \"$DANYS_MACHINE\" ]; then git push --follow-tags && open https://github.com/dcastil/tailwind-merge/releases; fi"
+        "postversion": "if [ -n \"$DANYS_MACHINE\" ]; then git push --follow-tags && open https://github.com/dcastil/tailwind-merge/releases; fi",
+        "gen-tailwind-rules": "tsx scripts/gen-tailwind-rules.ts"
     },
     "devDependencies": {
         "@size-limit/preset-small-lib": "^8.2.4",
@@ -66,6 +67,8 @@
         "prettier": "^2.8.7",
         "size-limit": "^8.2.4",
         "ts-jest": "^29.0.5",
+        "ts-toolbelt": "^9.6.0",
+        "tsx": "^3.12.7",
         "typescript": "^5.0.3",
         "zx": "^7.2.1"
     },
