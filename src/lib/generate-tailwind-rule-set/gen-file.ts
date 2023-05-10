@@ -2,17 +2,6 @@ import { CONSTANTS, TOP_CONFLICT_RULE } from './data'
 import { GenerationState } from './generation-state'
 import { GenerateTailwindRuleSetOptions } from './types'
 
-function shouldImportEmptySymbol(state: GenerationState) {
-    const conditions = [
-        state.borderCardinalRule,
-        state.roundedCardinalRule,
-        state.xyCardinalRules.length > 0,
-        state.trblCardinalRules.length > 0,
-    ]
-
-    return conditions.some(Boolean)
-}
-
 function orderByPriority(_targets: string[]): string[] {
     const targets = [..._targets]
     let seenTargets = []
@@ -47,7 +36,6 @@ export function generateFile(
     state: GenerationState,
     {
         importPath = 'merge-utility',
-        emptySymbolImportPath = importPath,
         exportName = 'tailwindRuleSet',
     }: GenerateTailwindRuleSetOptions,
 ) {
@@ -57,7 +45,6 @@ export function generateFile(
     file += 'import {\n  RuleSet,\n  '
     file += state.imports.join(',\n  ')
     file += `\n} from '${importPath}'\n`
-    if (shouldImportEmptySymbol(state)) file += `import { EMPTY } from '${emptySymbolImportPath}'\n`
 
     // constants
     state.constants.forEach((constant) => {
@@ -144,15 +131,9 @@ export function generateFile(
     // border cardinal rule
     // TODO
 
-    // rounded cardinal rule
-    // TODO
-
     // xy cardinal rules
     if (state.xyCardinalRules.length > 0) {
-        file += `\n  ...cardinalRules('${state.xyCardinalRules.join('|')}', {`
-        file += "\n    dir: 'x|y',"
-        file += '\n    overrides: { x: [EMPTY], y: [EMPTY] },'
-        file += '\n  }),'
+        file += `\n  ...cardinalRules('${state.xyCardinalRules.join('|')}'),`
     }
 
     // trbl cardinal rules

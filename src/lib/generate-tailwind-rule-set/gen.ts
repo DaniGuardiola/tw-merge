@@ -78,7 +78,7 @@ function updateImports(state: GenerationState) {
         ],
         simpleRule: [state.topSimpleRule.length > 0, state.topSimpleRuleByType.length > 0],
         cardinalRules: [state.xyCardinalRules.length > 0, state.trblCardinalRules.length > 0],
-        cardinalRule: [state.borderCardinalRule, state.roundedCardinalRule],
+        cardinalRule: [state.borderCardinalRule],
         arbitraryRule: [state.arbitraryRule],
         conflictRule: [state.topConflictRule.length > 0, state.flexBasisGrowShrinkConflictRule],
     }

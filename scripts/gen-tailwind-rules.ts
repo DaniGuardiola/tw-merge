@@ -1,2 +1,2 @@
 import { generateTailwindRuleSet } from '../src/lib/generate-tailwind-rule-set'
-generateTailwindRuleSet('all', { importPath: './rules', emptySymbolImportPath: './lib/shared' })
+generateTailwindRuleSet('all', { importPath: './rules' })

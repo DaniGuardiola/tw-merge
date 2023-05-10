@@ -4,7 +4,6 @@ import { UTILITIES_BY_CATEGORY } from './utilities-by-category'
 
 export type GenerateTailwindRuleSetOptions = {
     importPath?: string
-    emptySymbolImportPath?: string
     target?: 'file' | 'console'
     exportName?: string
 }

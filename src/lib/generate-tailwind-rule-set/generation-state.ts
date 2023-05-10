@@ -175,8 +175,7 @@ export type GenerationState = {
         | 'font'
     )[]
     borderCardinalRule: boolean
-    roundedCardinalRule: boolean
-    xyCardinalRules: ('gap' | 'inset' | 'scale' | 'overflow' | 'overscroll')[]
+    xyCardinalRules: ('rounded' | 'gap' | 'inset' | 'scale' | 'overflow' | 'overscroll')[]
     trblCardinalRules: ('p' | 'm' | 'scroll-m' | 'scroll-p')[]
     objectFitPositionUniqueRules: ('fit' | 'position')[]
     arbitraryRule: boolean
@@ -203,7 +202,6 @@ export const EMPTY_GENERATION_STATE: GenerationState = {
     topSimpleRule: [],
     topSimpleRuleByType: [],
     borderCardinalRule: false,
-    roundedCardinalRule: false,
     xyCardinalRules: [],
     trblCardinalRules: [],
     objectFitPositionUniqueRules: [],

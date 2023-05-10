@@ -53,16 +53,31 @@ export function simpleRule(target: string, { byType }: SimpleRuleOptions = {}): 
 // -------------
 
 export type CardinalHandlerOptions = {
-    overrides?: Partial<Record<string | typeof EMPTY, (string | typeof EMPTY)[]>>
     byType?: boolean
 }
 
 type Direction = string | typeof EMPTY
 
+const CARDINAL_DIRECTIONS = 't|r|b|l|tl|tr|br|bl|x|y|s|e|ss|se|es|ee'
+const CARDINAL_OVERRIDES: Partial<Record<string | typeof EMPTY, (string | typeof EMPTY)[]>> = {
+    t: [EMPTY, 'y', 'tl', 'tr'],
+    r: [EMPTY, 'x', 'tr', 'br'],
+    b: [EMPTY, 'y', 'br', 'bl'],
+    l: [EMPTY, 'x', 'bl', 'tl'],
+    x: [EMPTY],
+    y: [EMPTY],
+    s: [EMPTY],
+    e: [EMPTY],
+    ss: [EMPTY, 'e', 's'],
+    se: [EMPTY, 'e', 's'],
+    es: [EMPTY, 'e', 's'],
+    ee: [EMPTY, 'e', 's'],
+}
+const OVERRIDER_UTILITIES = new Set(Object.values(CARDINAL_OVERRIDES).flat())
+
 const OVERRIDERS = Symbol('overriders')
 
-export function createCardinalHandler({ overrides = {}, byType }: CardinalHandlerOptions = {}) {
-    const overriders = new Set(Object.values(overrides).flat())
+export function createCardinalHandler({ byType }: CardinalHandlerOptions = {}) {
     const cardinalHandler: Handler<
         Partial<Record<Direction, Partial<Record<'number' | 'other', boolean>>>> & {
             [OVERRIDERS]?: Partial<Record<'number' | 'other', Set<string | typeof EMPTY>>>
@@ -81,10 +96,10 @@ export function createCardinalHandler({ overrides = {}, byType }: CardinalHandle
         memory[context]![OVERRIDERS] ??= {}
         memory[context]![OVERRIDERS]![type] ??= new Set()
         const memOverriders = memory[context]![OVERRIDERS]![type]!
-        if (overrides[direction]?.some(memOverriders.has.bind(memOverriders))) return false
+        if (CARDINAL_OVERRIDES[direction]?.some(memOverriders.has.bind(memOverriders))) return false
 
         // remember overrider
-        if (overriders.has(direction)) memOverriders.add(direction)
+        if (OVERRIDER_UTILITIES.has(direction)) memOverriders.add(direction)
 
         // never seen
         mem[type] = true
@@ -100,17 +115,15 @@ export type CardinalRuleOptions = {
      * @default true
      */
     dash?: boolean
-    /** The allowed directions (e.g. `t|r|b|l`) */
-    dir?: string
 } & CardinalHandlerOptions
 
 export function cardinalRule(
     target: string,
-    { dash = true, dir, overrides, byType }: CardinalRuleOptions = {},
+    { dash = true, byType }: CardinalRuleOptions = {},
 ): Rule {
-    const _target = `${target}(?:${dash ? '-' : ''}(?<direction>${dir}))?`
+    const _target = `${target}(?:${dash ? '-' : ''}(?<direction>${CARDINAL_DIRECTIONS}))?`
     const regExp = `^${CONTEXT_REGEXP}${_target}${VALUE_REGEXP}$`
-    return [regExp, createCardinalHandler({ overrides, byType })]
+    return [regExp, createCardinalHandler({ byType })]
 }
 
 export function cardinalRules(targets: string, options?: CardinalRuleOptions) {

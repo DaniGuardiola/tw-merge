@@ -8,7 +8,6 @@ import {
     uniqueRules,
     conflictRule,
 } from './rules'
-import { EMPTY } from './lib/shared'
 
 const DISPLAY =
     'block|inline-block|inline-flex|inline-table|inline-grid|inline|flex|table-caption|table-cell|table-column-group|table-column|table-footer-group|table-header-group|table-row-group|table-row|table|flow-root|grid|contents|list-item|hidden'
@@ -117,51 +116,9 @@ export function tailwind(): RuleSet {
             'accent|align|animate|aspect|auto-cols|auto-rows|backdrop-blur|backdrop-brightness|backdrop-contrast|backdrop-grayscale|backdrop-hue-rotate|backdrop-invert|backdrop-opacity|backdrop-saturate|backdrop-sepia|basis|bg-blend|bg-clip|bg-origin|bg-none|bg-gradient|bg|blur|border-collapse|border-spacing|bottom|box-decoration|box|break-after|break-before|break-inside|break|brightness|caption|caret|clear|col-end|col-start|columns|col|content|contrast|cursor|decoration|delay|divide-x-reverse|divide-x|divide-y-reverse|divide-y|divide|drop-shadow|duration|ease|end|fill|flex|float|grayscale|grid-cols|grid-flow|grid-rows|grow|hue-rotate|hyphens|h|indent|invert|items|justify-items|justify-self|justify|leading|left|line-clamp|list-image|list|max-h|max-w|min-h|min-w|mix-blend|opacity|order|origin|outline-offset|place-content|place-items|place-self|pointer-events|resize|right|ring-inset|rotate|row-end|row-start|row|saturate|select|self|sepia|shadow|shrink|skew-x|skew-y|space-x-reverse|space-x|space-y-reverse|space-y|start|table|top|touch|tracking|transition|translate-x|translate-y|underline-offset|whitespace|will-change|w|z',
         ),
         simpleRule('text|outline|ring-offset|ring|from|via|to|stroke|font', { byType: true }),
-        cardinalRule('border', {
-            dir: 't|r|b|l|x|y|s|e',
-            overrides: {
-                t: [EMPTY, 'y'],
-                r: [EMPTY, 'x'],
-                b: [EMPTY, 'y'],
-                l: [EMPTY, 'x'],
-                x: [EMPTY],
-                y: [EMPTY],
-                s: [EMPTY],
-                e: [EMPTY],
-            },
-            byType: true,
-        }),
-        cardinalRule('rounded', {
-            dir: 't|r|b|l|tl|tr|br|bl|s|e|ss|se|es|ee',
-            overrides: {
-                t: [EMPTY, 'tl', 'tr'],
-                r: [EMPTY, 'tr', 'br'],
-                b: [EMPTY, 'br', 'bl'],
-                l: [EMPTY, 'bl', 'tl'],
-                ss: [EMPTY, 'e', 's'],
-                se: [EMPTY, 'e', 's'],
-                es: [EMPTY, 'e', 's'],
-                ee: [EMPTY, 'e', 's'],
-            },
-        }),
-        ...cardinalRules('gap|inset|scale|overflow|overscroll', {
-            dir: 'x|y',
-            overrides: { x: [EMPTY], y: [EMPTY] },
-        }),
-        ...cardinalRules('p|m|scroll-m|scroll-p', {
-            dir: 't|r|b|l|x|y|s|e',
-            overrides: {
-                t: [EMPTY, 'y'],
-                r: [EMPTY, 'x'],
-                b: [EMPTY, 'y'],
-                l: [EMPTY, 'x'],
-                x: [EMPTY],
-                y: [EMPTY],
-                s: [EMPTY, 'x'],
-                e: [EMPTY, 'x'],
-            },
-            dash: false,
-        }),
+        cardinalRule('border', { byType: true }),
+        ...cardinalRules('rounded|gap|inset|scale|overflow|overscroll'),
+        ...cardinalRules('p|m|scroll-m|scroll-p', { dash: false }),
         ...uniqueRules([OBJECT_FIT, BG_AND_OBJECT_POSITION], { prefix: 'object' }),
         arbitraryRule(),
     ]

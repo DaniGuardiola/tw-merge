@@ -26,7 +26,7 @@
 -   [x] always default
 -   [x] always trailing slash
 -   [x] `simpleRules`: instead of creating a rule for each target, do a single one with a mega-regex
--   [ ] universal cardinal rule setup
+-   [x] universal cardinal rule setup
 
 # Publishing
 
