@@ -1,6 +1,6 @@
 {
     "name": "tw-merge",
-    "version": "0.0.1-alpha.0",
+    "version": "0.0.1-alpha.1",
     "description": "Merge CSS utility classes without style conflicts and a small bundle size",
     "keywords": [
         "tailwindcss",
@@ -28,10 +28,10 @@
     "exports": {
         "types": "./dist/index.d.ts",
         "require": "./dist/index.js",
-        "import": "./dist/tailwind-merge.mjs",
-        "default": "./dist/tailwind-merge.mjs"
+        "import": "./dist/tw-merge.mjs",
+        "default": "./dist/tw-merge.mjs"
     },
-    "module": "dist/tailwind-merge.mjs",
+    "module": "dist/tw-merge.mjs",
     "main": "dist/index.js",
     "types": "./dist/index.d.ts",
     "repository": {
@@ -71,5 +71,8 @@
     },
     "publishConfig": {
         "provenance": true
+    },
+    "dependencies": {
+        "tw-merge": "^0.0.1-alpha.0-dev.a435ef618c6dca77fdfea295968cca89ec10002a"
     }
 }
