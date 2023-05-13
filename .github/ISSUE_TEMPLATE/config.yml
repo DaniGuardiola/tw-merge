@@ -1,11 +1,11 @@
 blank_issues_enabled: true
 contact_links:
-    - name: Get Help
-      url: https://github.com/dcastil/tailwind-merge/discussions/new?category=help
+    - name: Get help
+      url: https://github.com/compi-ui/tw-merge/discussions/new?category=help
       about: If you can't get something to work the way you expect, open a question in the discussion forums.
-    - name: Feature Request
-      url: https://github.com/dcastil/tailwind-merge/discussions/new?category=ideas
+    - name: Feature request
+      url: https://github.com/compi-ui/tw-merge/discussions/new?category=ideas
       about: Suggest any ideas you have using the discussion forum.
-    - name: Bug Report
-      url: https://github.com/dcastil/tailwind-merge/issues/new
+    - name: Bug report
+      url: https://github.com/compi-ui/tw-merge/issues/new
       about: If something is broken with tailwind-merge itself, create a bug report.

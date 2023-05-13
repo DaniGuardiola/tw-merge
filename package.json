@@ -1,7 +1,7 @@
 {
-    "name": "tailwind-merge",
-    "version": "1.12.0",
-    "description": "Merge Tailwind CSS classes without style conflicts",
+    "name": "tw-merge",
+    "version": "0.0.1-alpha.0",
+    "description": "Merge CSS utility classes without style conflicts and a small bundle size",
     "keywords": [
         "tailwindcss",
         "tailwind",
@@ -11,18 +11,15 @@
         "classList",
         "merge",
         "conflict",
-        "override"
+        "override",
+        "utility"
     ],
-    "homepage": "https://github.com/dcastil/tailwind-merge",
+    "homepage": "https://github.com/compi-ui/tw-merge",
     "bugs": {
-        "url": "https://github.com/dcastil/tailwind-merge/issues"
-    },
-    "funding": {
-        "type": "github",
-        "url": "https://github.com/sponsors/dcastil"
+        "url": "https://github.com/compi-ui/tw-merge/issues"
     },
     "license": "MIT",
-    "author": "Dany Castillo",
+    "author": "Dani Guardiola",
     "files": [
         "dist",
         "src"
@@ -39,7 +36,7 @@
     "types": "./dist/index.d.ts",
     "repository": {
         "type": "git",
-        "url": "https://github.com/dcastil/tailwind-merge.git"
+        "url": "https://github.com/compi-ui/tw-merge.git"
     },
     "sideEffects": false,
     "scripts": {

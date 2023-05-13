@@ -4,7 +4,7 @@
         ":combinePatchMinorReleases",
         "group:allNonMajor",
         ":labels(dependencies,skip changelog)",
-        ":assignee(dcastil)",
+        ":assignee(DaniGuardiola)",
         ":enableVulnerabilityAlertsWithLabel(security)",
         "schedule:monthly"
     ],
