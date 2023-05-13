@@ -111,6 +111,7 @@ export function generateTailwindRuleSet(
 
     // eslint-disable-next-line no-console
     if (target === 'console') console.log(file)
+    // eslint-disable-next-line no-console
     else console.log('TODO')
 
     return file
