@@ -1,2 +1,2 @@
-import { generateTailwindRuleSet } from "../src/lib/generate-tailwind-rule-set";
+import { generateTailwindRuleSet } from "../src/generate-tailwind-rule-set";
 generateTailwindRuleSet("all", { importPath: "./rules" });

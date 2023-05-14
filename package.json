@@ -59,6 +59,7 @@
     "globby": "^11.1.0",
     "prettier": "^2.8.7",
     "size-limit": "^8.2.4",
+    "tailwind-merge": "^1.12.0",
     "ts-jest": "^29.0.5",
     "ts-toolbelt": "^9.6.0",
     "tsx": "^3.12.7",
