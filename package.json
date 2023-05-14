@@ -1,6 +1,6 @@
 {
   "name": "tw-merge",
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1-alpha.1",
   "description": "Merge CSS utility classes without style conflicts - small and zero config",
   "keywords": [
     "tailwindcss",
