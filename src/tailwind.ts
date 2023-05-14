@@ -89,15 +89,11 @@ export function tailwind(): RuleSet {
     ...uniqueRules([TEXT_ALIGN, FONT_AND_SHADOW_SIZE], { prefix: "text" }),
     ...uniqueRules(
       [BG_ATTACHMENT, BG_AND_OBJECT_POSITION, BG_REPEAT, BG_SIZE],
-      {
-        prefix: "bg",
-      }
+      { prefix: "bg" }
     ),
     ...uniqueRules(
       [SCROLL_BEHAVIOR, SCROLL_SNAP_ALIGN, SCROLL_SNAP_STOP, SCROLL_SNAP_TYPE],
-      {
-        prefix: "scroll",
-      }
+      { prefix: "scroll" }
     ),
     ...uniqueRules([
       DISPLAY,

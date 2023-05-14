@@ -125,10 +125,10 @@ export function cardinalRules(targets: string, options?: CardinalRuleOptions) {
 // -----------
 
 export function createUniqueHandler() {
-  const uniqueValueHandler: Handler<{ seen: boolean }> = (memory) => {
+  const uniqueHandler: Handler<{ seen: boolean }> = (memory) => {
     return memory.seen ? false : (memory.seen = true);
   };
-  return uniqueValueHandler;
+  return uniqueHandler;
 }
 
 export type UniqueRuleOptions = { prefix?: string; def?: boolean };
@@ -164,8 +164,7 @@ export function createArbitraryHandler() {
     if (mem.done) return false;
 
     // never seen
-    mem.done = true;
-    return true;
+    return (mem.done = true);
   };
 
   return arbitraryHandler;
