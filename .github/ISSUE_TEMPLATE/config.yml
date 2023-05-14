@@ -8,4 +8,4 @@ contact_links:
     about: Suggest any ideas you have using the discussion forum.
   - name: Bug report
     url: https://github.com/compi-ui/tw-merge/issues/new
-    about: If something is broken with tailwind-merge itself, create a bug report.
+    about: If something is broken with tw-merge itself, create a bug report.

@@ -47,7 +47,9 @@ export async function benchmark(
 
   // run
   console.log(
-    `\nThe merge function will be called ${times} times with ${inputs.length} inputs.\n`
+    `\nThe merge function will be tested ${times} times with ${
+      inputs.length
+    } inputs for a total of ${times * inputs.length} function calls.\n`
   );
   console.log("Running benchmark...");
   const time = bench(() => run(merge, times));

@@ -9,7 +9,6 @@ export {
   conflictRule,
   simpleRule,
   uniqueRule,
-  uniqueRules,
 } from "./rules";
 
 export const twMerge = createMerge(tailwind());

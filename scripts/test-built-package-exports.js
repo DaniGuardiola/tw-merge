@@ -8,4 +8,4 @@ assert(
     "hover:bg-dark-red p-3 bg-[#B91C1C]"
 );
 
-console.log("[tailwind-merge] Tests for built CJS package exports passed.");
+console.log("[tw-merge] Tests for built CJS package exports passed.");

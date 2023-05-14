@@ -125,29 +125,21 @@ export function cardinalRules(targets: string, options?: CardinalRuleOptions) {
 // -----------
 
 export function createUniqueHandler() {
-  const uniqueHandler: Handler<{ seen: boolean }> = (memory) => {
-    return memory.seen ? false : (memory.seen = true);
+  const uniqueHandler: Handler<Record<string, boolean>> = (memory, groups) => {
+    const key = Object.entries(groups).find((x) => x[1])![0];
+    return memory[key] ? false : (memory[key] = true);
   };
   return uniqueHandler;
 }
 
 export type UniqueRuleOptions = { prefix?: string; def?: boolean };
 
-export function uniqueRule(
-  values: string,
-  { prefix, def }: UniqueRuleOptions = {}
-): Rule {
-  const _prefix = prefix ? `${prefix}-` : "";
-  const utility = `(${values})${TRAILING_SLASH_REGEXP}`;
-  const body = def
-    ? `(?:${prefix}|${_prefix}${utility})`
-    : `${_prefix}${utility}`;
+export function uniqueRule(targets: string[]): Rule {
+  const body = `(${targets
+    .map((target, i) => `(?<i${i}>${target})`)
+    .join("|")})${TRAILING_SLASH_REGEXP}`;
   const regExp = `${body}$`;
   return [regExp, createUniqueHandler()];
-}
-
-export function uniqueRules(targets: string[], options?: UniqueRuleOptions) {
-  return targets.map((target) => uniqueRule(target, options));
 }
 
 // arbitrary rule

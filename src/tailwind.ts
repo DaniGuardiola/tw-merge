@@ -5,7 +5,6 @@ import {
   cardinalRules,
   cardinalRule,
   arbitraryRule,
-  uniqueRules,
   conflictRule,
 } from "./rules";
 
@@ -84,18 +83,7 @@ export function tailwind(): RuleSet {
       "bg-gradient": "bg-none",
       "bg-none": "bg-gradient",
     }),
-    ...uniqueRules([FLEX_DIRECTION, FLEX_WRAP], { prefix: "flex" }),
-    conflictRule({ flex: "basis|grow|shrink" }),
-    ...uniqueRules([TEXT_ALIGN, FONT_AND_SHADOW_SIZE], { prefix: "text" }),
-    ...uniqueRules(
-      [BG_ATTACHMENT, BG_AND_OBJECT_POSITION, BG_REPEAT, BG_SIZE],
-      { prefix: "bg" }
-    ),
-    ...uniqueRules(
-      [SCROLL_BEHAVIOR, SCROLL_SNAP_ALIGN, SCROLL_SNAP_STOP, SCROLL_SNAP_TYPE],
-      { prefix: "scroll" }
-    ),
-    ...uniqueRules([
+    uniqueRule([
       DISPLAY,
       ISOLATION,
       POSITION,
@@ -109,14 +97,31 @@ export function tailwind(): RuleSet {
       TEXT_TRANSFORM,
       TEXT_OVERFLOW,
     ]),
-    uniqueRule(ALIGN_CONTENT, { prefix: "content" }),
-    uniqueRule(LIST_STYLE_POSITION, { prefix: "list" }),
-    uniqueRule(TEXT_DECORATION_STYLE, { prefix: "decoration" }),
-    uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: "border" }),
-    uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: "divide" }),
-    uniqueRule(BORDER_AND_OUTLINE_STYLE, { prefix: "outline", def: true }),
-    uniqueRule(FONT_AND_SHADOW_SIZE, { prefix: "shadow" }),
-    uniqueRule(FONT_WEIGHT, { prefix: "font" }),
+    uniqueRule([
+      `content-(${ALIGN_CONTENT})`,
+      `list-(${LIST_STYLE_POSITION})`,
+      `decoration-(${TEXT_DECORATION_STYLE})`,
+      `border-(${BORDER_AND_OUTLINE_STYLE})`,
+      `divide-(${BORDER_AND_OUTLINE_STYLE})`,
+      `outline|outline-(${BORDER_AND_OUTLINE_STYLE})`,
+      `shadow-(${FONT_AND_SHADOW_SIZE})`,
+      `font-(${FONT_WEIGHT})`,
+      ...[OBJECT_FIT, BG_AND_OBJECT_POSITION].map((t) => `object-(${t})`),
+    ]),
+    uniqueRule([
+      ...[
+        SCROLL_BEHAVIOR,
+        SCROLL_SNAP_ALIGN,
+        SCROLL_SNAP_STOP,
+        SCROLL_SNAP_TYPE,
+      ].map((t) => `scroll-(${t})`),
+      ...[BG_ATTACHMENT, BG_AND_OBJECT_POSITION, BG_REPEAT, BG_SIZE].map(
+        (t) => `bg-(${t})`
+      ),
+      ...[TEXT_ALIGN, FONT_AND_SHADOW_SIZE].map((t) => `text-(${t})`),
+      ...[FLEX_DIRECTION, FLEX_WRAP].map((t) => `flex-(${t})`),
+    ]),
+    conflictRule({ flex: "basis|grow|shrink" }),
     // -----------------------------------------------------------------
     simpleRule(
       "accent|align|animate|aspect|auto-cols|auto-rows|backdrop-blur|backdrop-brightness|backdrop-contrast|backdrop-grayscale|backdrop-hue-rotate|backdrop-invert|backdrop-opacity|backdrop-saturate|backdrop-sepia|basis|bg-blend|bg-clip|bg-origin|bg-none|bg-gradient|bg|blur|border-collapse|border-spacing|bottom|box-decoration|box|break-after|break-before|break-inside|break|brightness|caption|caret|clear|col-end|col-start|columns|col|content|contrast|cursor|decoration|delay|divide-x-reverse|divide-x|divide-y-reverse|divide-y|divide|drop-shadow|duration|ease|end|fill|flex|float|grayscale|grid-cols|grid-flow|grid-rows|grow|hue-rotate|hyphens|h|indent|invert|items|justify-items|justify-self|justify|leading|left|line-clamp|list-image|list|max-h|max-w|min-h|min-w|mix-blend|opacity|order|origin|outline-offset|place-content|place-items|place-self|pointer-events|resize|right|ring-inset|rotate|row-end|row-start|row|saturate|select|self|sepia|shadow|shrink|skew-x|skew-y|space-x-reverse|space-x|space-y-reverse|space-y|start|table|top|touch|tracking|transition|translate-x|translate-y|underline-offset|whitespace|will-change|w|z"
@@ -127,7 +132,6 @@ export function tailwind(): RuleSet {
     cardinalRule("border", { byType: true }),
     ...cardinalRules("rounded|gap|inset|scale|overflow|overscroll"),
     ...cardinalRules("p|m|scroll-m|scroll-p", { dash: false }),
-    ...uniqueRules([OBJECT_FIT, BG_AND_OBJECT_POSITION], { prefix: "object" }),
     arbitraryRule(),
   ];
 }
