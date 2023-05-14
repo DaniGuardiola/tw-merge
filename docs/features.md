@@ -93,7 +93,7 @@ twMerge('p-5 p-2 my-non-tailwind-class p-4') // → 'my-non-tailwind-class p-4'
 twMerge('text-red text-secret-sauce') // → 'text-secret-sauce'
 ```
 
-Why no object support? [Read here](https://github.com/dcastil/tailwind-merge/discussions/137#discussioncomment-3481605).
+Why no object support? [Read here](https://github.com/compi-ui/tw-merge/discussions/137#discussioncomment-3481605).
 
 ---
 

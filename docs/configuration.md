@@ -128,7 +128,7 @@ const conflictingClassGroupModifiers = {
 
 ### Theme
 
-In the Tailwind config you can modify theme scales. tailwind-merge follows the same keys for the theme scales, but doesn't support all of them. tailwind-merge only supports theme scales which are used in multiple class groups to save bundle size (more info to that in [PR 55](https://github.com/dcastil/tailwind-merge/pull/55)). At the moment these are:
+In the Tailwind config you can modify theme scales. tailwind-merge follows the same keys for the theme scales, but doesn't support all of them. tailwind-merge only supports theme scales which are used in multiple class groups to save bundle size (more info to that in [PR 55](https://github.com/compi-ui/tw-merge/pull/55)). At the moment these are:
 
 -   `colors`
 -   `spacing`

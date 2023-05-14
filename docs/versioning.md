@@ -14,7 +14,7 @@ This package follows the [SemVer](https://semver.org) versioning rules. More spe
 
 -   A non-production-ready version of every commit pushed to the main branch is released under the `dev` tag for testing purposes. It has a format like [`1.6.1-dev.4202ccf913525617f19fbc493db478a76d64d054`](https://www.npmjs.com/package/tailwind-merge/v/1.6.1-dev.4202ccf913525617f19fbc493db478a76d64d054) in which the first numbers are the corresponding last release and the hash at the end is the git SHA of the commit. You can install the latest dev release with `yarn add tailwind-merge@dev`.
 
--   A changelog is documented in [GitHub Releases](https://github.com/dcastil/tailwind-merge/releases).
+-   A changelog is documented in [GitHub Releases](https://github.com/compi-ui/tw-merge/releases).
 
 ---
 

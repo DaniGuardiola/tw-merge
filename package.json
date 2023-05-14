@@ -1,7 +1,7 @@
 {
     "name": "tw-merge",
     "version": "0.0.1-alpha.1",
-    "description": "Merge CSS utility classes without style conflicts and a small bundle size",
+    "description": "Merge CSS utility classes without style conflicts - small and zero config",
     "keywords": [
         "tailwindcss",
         "tailwind",
@@ -45,9 +45,9 @@
         "test:exports": "node scripts/test-built-package-exports.js && node scripts/test-built-package-exports.mjs",
         "lint": "eslint --max-warnings 0 '**'",
         "size": "size-limit",
-        "preversion": "if [ -n \"$DANYS_MACHINE\" ]; then git checkout main && git pull; fi",
+        "preversion": "git checkout main && git pull",
         "version": "zx scripts/update-readme.js",
-        "postversion": "if [ -n \"$DANYS_MACHINE\" ]; then git push --follow-tags && open https://github.com/dcastil/tailwind-merge/releases; fi",
+        "postversion": "git push --follow-tags && open https://github.com/compi-ui/tw-merge/releases",
         "gen-tailwind-rules": "tsx scripts/gen-tailwind-rules.ts"
     },
     "devDependencies": {
