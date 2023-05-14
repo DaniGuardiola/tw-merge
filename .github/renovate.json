@@ -1,14 +1,14 @@
 {
-    "extends": [
-        "config:base",
-        ":combinePatchMinorReleases",
-        "group:allNonMajor",
-        ":labels(dependencies,skip changelog)",
-        ":assignee(DaniGuardiola)",
-        ":enableVulnerabilityAlertsWithLabel(security)",
-        "schedule:monthly"
-    ],
-    "timezone": "Europe/Berlin",
-    "prHourlyLimit": 10,
-    "rangeStrategy": "bump"
+  "extends": [
+    "config:base",
+    ":combinePatchMinorReleases",
+    "group:allNonMajor",
+    ":labels(dependencies,skip changelog)",
+    ":assignee(DaniGuardiola)",
+    ":enableVulnerabilityAlertsWithLabel(security)",
+    "schedule:monthly"
+  ],
+  "timezone": "Europe/Berlin",
+  "prHourlyLimit": 10,
+  "rangeStrategy": "bump"
 }

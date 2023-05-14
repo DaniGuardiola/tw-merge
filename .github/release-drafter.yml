@@ -1,52 +1,52 @@
-name-template: 'v$RESOLVED_VERSION'
-tag-template: 'v$RESOLVED_VERSION'
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
 template: |
-    $CHANGES
+  $CHANGES
 
-    **Full Changelog**: https://github.com/compi-ui/tw-merge/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
-category-template: '### $TITLE'
-change-template: '- $TITLE by @$AUTHOR in https://github.com/compi-ui/tw-merge/pull/$NUMBER'
+  **Full Changelog**: https://github.com/compi-ui/tw-merge/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+category-template: "### $TITLE"
+change-template: "- $TITLE by @$AUTHOR in https://github.com/compi-ui/tw-merge/pull/$NUMBER"
 change-title-escapes: '\<*_&'
-no-changes-template: 'No changes'
+no-changes-template: "No changes"
 categories:
-    - title: '⚠️ Needs Changelog Edit'
-      label: 'needs changelog edit'
-    - title: 'Breaking Changes'
-      label: 'breaking'
-    - title: 'New Features'
-      label: 'feature'
-    - title: 'Bug Fixes'
-      label: 'bugfix'
-    - title: 'Other'
-      label: 'other'
+  - title: "⚠️ Needs Changelog Edit"
+    label: "needs changelog edit"
+  - title: "Breaking Changes"
+    label: "breaking"
+  - title: "New Features"
+    label: "feature"
+  - title: "Bug Fixes"
+    label: "bugfix"
+  - title: "Other"
+    label: "other"
 exclude-labels:
-    - 'skip changelog'
+  - "skip changelog"
 version-resolver:
-    major:
-        labels:
-            - 'breaking'
-    minor:
-        labels:
-            - 'feature'
-    patch:
-        labels:
-            - 'bugfix'
-            - 'other'
-    default: 'patch'
+  major:
+    labels:
+      - "breaking"
+  minor:
+    labels:
+      - "feature"
+  patch:
+    labels:
+      - "bugfix"
+      - "other"
+  default: "patch"
 autolabeler:
-    - label: 'feature'
-      branch:
-          - '/\bfeature\b/i'
-      title:
-          - '/\bfeature\b/i'
-    - label: 'bugfix'
-      branch:
-          - '/\b(bugfix|fix)\b/i'
-      title:
-          - '/\b(bugfix|fix)\b/i'
-    - label: 'other'
-      branch:
-          - '/^other\b/i'
-    - label: 'breaking'
-      branch:
-          - '/^breaking-/i'
+  - label: "feature"
+    branch:
+      - '/\bfeature\b/i'
+    title:
+      - '/\bfeature\b/i'
+  - label: "bugfix"
+    branch:
+      - '/\b(bugfix|fix)\b/i'
+    title:
+      - '/\b(bugfix|fix)\b/i'
+  - label: "other"
+    branch:
+      - '/^other\b/i'
+  - label: "breaking"
+    branch:
+      - "/^breaking-/i"

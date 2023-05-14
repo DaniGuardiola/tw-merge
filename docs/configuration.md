@@ -10,10 +10,10 @@ If you're using a custom Tailwind config, you may need to configure tailwind-mer
 
 The default [`twMerge`](./api-reference.md#twmerge) function is configured in a way that you can still use it if all the following points apply to your Tailwind config:
 
--   Only using color names which don't clash with other Tailwind class names
--   Only deviating by number values from number-based Tailwind classes
--   Only using font-family classes which don't clash with default font-weight classes
--   Sticking to default Tailwind config for everything else
+- Only using color names which don't clash with other Tailwind class names
+- Only deviating by number values from number-based Tailwind classes
+- Only using font-family classes which don't clash with default font-weight classes
+- Sticking to default Tailwind config for everything else
 
 If some of these points don't apply to you, you can test whether `twMerge` still works as intended with your custom classes. Otherwise, you need create your own custom merge function by either extending the default tailwind-merge config or using a completely custom one.
 
@@ -53,13 +53,19 @@ const tailwindMergeConfig = {
 The library uses a concept of _class groups_ which is an array of Tailwind classes which all modify the same CSS property. E.g. here is the position class group.
 
 ```ts
-const positionClassGroup = ['static', 'fixed', 'absolute', 'relative', 'sticky']
+const positionClassGroup = [
+  "static",
+  "fixed",
+  "absolute",
+  "relative",
+  "sticky",
+];
 ```
 
 tailwind-merge resolves conflicts between classes in a class group and only keeps the last one passed to the merge function call.
 
 ```ts
-twMerge('static sticky relative') // → 'relative'
+twMerge("static sticky relative"); // → 'relative'
 ```
 
 Tailwind classes often share the beginning of the class name, so elements in a class group can also be an object with values of the same shape as a class group (yes, the shape is recursive). In the object each key is joined with all the elements in the corresponding array with a dash (`-`) in between.
@@ -67,7 +73,9 @@ Tailwind classes often share the beginning of the class name, so elements in a c
 E.g. here is the overflow class group which results in the classes `overflow-auto`, `overflow-hidden`, `overflow-visible` and `overflow-scroll`.
 
 ```ts
-const overflowClassGroup = [{ overflow: ['auto', 'hidden', 'visible', 'scroll'] }]
+const overflowClassGroup = [
+  { overflow: ["auto", "hidden", "visible", "scroll"] },
+];
 ```
 
 Sometimes it isn't possible to enumerate all elements in a class group. Think of a Tailwind class which allows arbitrary values. In this scenario you can use a validator function which takes a _class part_ and returns a boolean indicating whether a class is part of a class group.
@@ -75,8 +83,8 @@ Sometimes it isn't possible to enumerate all elements in a class group. Think of
 E.g. here is the fill class group.
 
 ```ts
-const isArbitraryValue = (classPart: string) => /^\[.+\]$/.test(classPart)
-const fillClassGroup = [{ fill: ['current', isArbitraryValue] }]
+const isArbitraryValue = (classPart: string) => /^\[.+\]$/.test(classPart);
+const fillClassGroup = [{ fill: ["current", isArbitraryValue] }];
 ```
 
 Because the function is under the `fill` key, it will only get called for classes which start with `fill-`. Also, the function only gets passed the part of the class name which comes after `fill-`, this way you can use the same function in multiple class groups. tailwind-merge exports its own [validators](./api-reference.md#validators), so you don't need to recreate them.
@@ -85,7 +93,7 @@ You can use an empty string (`''`) as a class part if you want to indicate that 
 
 ```ts
 // ↓ Resolves to filter and filter-none
-const filterClassGroup = [{ filter: ['', 'none'] }]
+const filterClassGroup = [{ filter: ["", "none"] }];
 ```
 
 Each class group is defined under its ID in the `classGroups` object in the config. This ID is only used internally, and the only thing that matters is that it is unique among all class groups.
@@ -106,8 +114,8 @@ This is what the `conflictingClassGroups` object in the tailwind-merge config is
 
 ```ts
 const conflictingClassGroups = {
-    px: ['pr', 'pl'],
-}
+  px: ["pr", "pl"],
+};
 ```
 
 If a class group _creates_ a conflict, it means that if it appears in a class list string passed to `twMerge`, all preceding class groups in the string which _receive_ the conflict will be removed.
@@ -122,39 +130,39 @@ For this tailwind-merge has the `conflictingClassGroupModifiers` object in its c
 
 ```ts
 const conflictingClassGroupModifiers = {
-    'font-size': ['leading'],
-}
+  "font-size": ["leading"],
+};
 ```
 
 ### Theme
 
 In the Tailwind config you can modify theme scales. tailwind-merge follows the same keys for the theme scales, but doesn't support all of them. tailwind-merge only supports theme scales which are used in multiple class groups to save bundle size (more info to that in [PR 55](https://github.com/compi-ui/tw-merge/pull/55)). At the moment these are:
 
--   `colors`
--   `spacing`
--   `blur`
--   `brightness`
--   `borderColor`
--   `borderRadius`
--   `borderSpacing`
--   `borderWidth`
--   `contrast`
--   `grayscale`
--   `hueRotate`
--   `invert`
--   `gap`
--   `gradientColorStops`
--   `gradientColorStopPositions`
--   `inset`
--   `margin`
--   `opacity`
--   `padding`
--   `saturate`
--   `scale`
--   `sepia`
--   `skew`
--   `space`
--   `translate`
+- `colors`
+- `spacing`
+- `blur`
+- `brightness`
+- `borderColor`
+- `borderRadius`
+- `borderSpacing`
+- `borderWidth`
+- `contrast`
+- `grayscale`
+- `hueRotate`
+- `invert`
+- `gap`
+- `gradientColorStops`
+- `gradientColorStopPositions`
+- `inset`
+- `margin`
+- `opacity`
+- `padding`
+- `saturate`
+- `scale`
+- `sepia`
+- `skew`
+- `space`
+- `translate`
 
 If you modified one of these theme scales in your Tailwind config, you can add all your keys right here and tailwind-merge will take care of the rest. If you modified other theme scales, you need to figure out the class group to modify in the [default config](./api-reference.md#getdefaultconfig).
 
@@ -163,28 +171,28 @@ If you modified one of these theme scales in your Tailwind config, you can add a
 If you only need to extend the default tailwind-merge config, [`extendTailwindMerge`](./api-reference.md#extendtailwindmerge) is the easiest way to extend the config. You provide it a `configExtension` object which gets [merged](./api-reference.md#mergeconfigs) with the default config. Therefore, all keys here are optional.
 
 ```ts
-import { extendTailwindMerge } from 'tailwind-merge'
+import { extendTailwindMerge } from "tailwind-merge";
 
 const customTwMerge = extendTailwindMerge({
-    // ↓ Add values to existing theme scale or create a new one
-    theme: {
-        spacing: ['sm', 'md', 'lg'],
-    },
-    // ↓ Add values to existing class groups or define new ones
-    classGroups: {
-        foo: ['foo', 'foo-2', { 'bar-baz': ['', '1', '2'] }],
-        bar: [{ qux: ['auto', (value) => Number(value) >= 1000] }],
-        baz: ['baz-sm', 'baz-md', 'baz-lg'],
-    },
-    // ↓ Here you can define additional conflicts across class groups
-    conflictingClassGroups: {
-        foo: ['bar'],
-    },
-    // ↓ Define conflicts between postfix modifiers and class groups
-    conflictingClassGroupModifiers: {
-        baz: ['bar'],
-    },
-})
+  // ↓ Add values to existing theme scale or create a new one
+  theme: {
+    spacing: ["sm", "md", "lg"],
+  },
+  // ↓ Add values to existing class groups or define new ones
+  classGroups: {
+    foo: ["foo", "foo-2", { "bar-baz": ["", "1", "2"] }],
+    bar: [{ qux: ["auto", (value) => Number(value) >= 1000] }],
+    baz: ["baz-sm", "baz-md", "baz-lg"],
+  },
+  // ↓ Here you can define additional conflicts across class groups
+  conflictingClassGroups: {
+    foo: ["bar"],
+  },
+  // ↓ Define conflicts between postfix modifiers and class groups
+  conflictingClassGroupModifiers: {
+    baz: ["bar"],
+  },
+});
 ```
 
 ### Using completely custom tailwind-merge config
@@ -194,23 +202,23 @@ If you need to modify the tailwind-merge config and need more control than [`ext
 The function takes a callback which returns the config you want to use and returns a custom `twMerge` function.
 
 ```ts
-import { createTailwindMerge } from 'tailwind-merge'
+import { createTailwindMerge } from "tailwind-merge";
 
 const customTwMerge = createTailwindMerge(() => ({
-    cacheSize: 500,
-    theme: {},
-    classGroups: {
-        foo: ['foo', 'foo-2', { 'bar-baz': ['', '1', '2'] }],
-        bar: [{ qux: ['auto', (value) => Number(value) >= 1000] }],
-        baz: ['baz-sm', 'baz-md', 'baz-lg'],
-    },
-    conflictingClassGroups: {
-        foo: ['bar'],
-    },
-    conflictingClassGroupModifiers: {
-        baz: ['bar'],
-    },
-}))
+  cacheSize: 500,
+  theme: {},
+  classGroups: {
+    foo: ["foo", "foo-2", { "bar-baz": ["", "1", "2"] }],
+    bar: [{ qux: ["auto", (value) => Number(value) >= 1000] }],
+    baz: ["baz-sm", "baz-md", "baz-lg"],
+  },
+  conflictingClassGroups: {
+    foo: ["bar"],
+  },
+  conflictingClassGroupModifiers: {
+    baz: ["bar"],
+  },
+}));
 ```
 
 The callback passed to `createTailwindMerge` will be called when `customTwMerge` is called the first time, so you don't need to worry about the computations in it affecting app startup performance in case you aren't using tailwind-merge at app startup.
@@ -238,26 +246,26 @@ const twMerge3 = createTailwindMerge(() => ({  … }), withMagic, withMoreMagic)
 
 ```js
 function orderByPriority(_targets) {
-    const targets = [..._targets]
-    let seenTargets = []
-    let i = 0
-    while (i < targets.length) {
-        const target = targets[i]
-        const seenIndex = seenTargets.findIndex((t) => target.startsWith(t))
-        if (seenIndex >= 0) {
-            const [t] = targets.splice(i, 1)
-            targets.splice(seenIndex, 0, t)
-            return orderByPriority(targets)
-        }
-        seenTargets.push(target)
-        i++
-        continue
+  const targets = [..._targets];
+  let seenTargets = [];
+  let i = 0;
+  while (i < targets.length) {
+    const target = targets[i];
+    const seenIndex = seenTargets.findIndex((t) => target.startsWith(t));
+    if (seenIndex >= 0) {
+      const [t] = targets.splice(i, 1);
+      targets.splice(seenIndex, 0, t);
+      return orderByPriority(targets);
     }
-    return targets
+    seenTargets.push(target);
+    i++;
+    continue;
+  }
+  return targets;
 }
 
 function orderTargets(targets) {
-    return orderByPriority(targets.sort())
+  return orderByPriority(targets.sort());
 }
 ```
 

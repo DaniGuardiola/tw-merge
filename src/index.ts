@@ -1,15 +1,15 @@
-import { createMerge } from './lib/create-merge'
-import { tailwind } from './tailwind'
+import { createMerge } from "./lib/create-merge";
+import { tailwind } from "./tailwind";
 
-export { createMerge, tailwind }
+export { createMerge, tailwind };
 export {
-    arbitraryRule,
-    cardinalRule,
-    cardinalRules,
-    conflictRule,
-    simpleRule,
-    uniqueRule,
-    uniqueRules,
-} from './rules'
+  arbitraryRule,
+  cardinalRule,
+  cardinalRules,
+  conflictRule,
+  simpleRule,
+  uniqueRule,
+  uniqueRules,
+} from "./rules";
 
-export const twMerge = createMerge(tailwind())
+export const twMerge = createMerge(tailwind());

@@ -6,17 +6,17 @@ If you use Tailwind with a component-based UI renderer like [React](https://reac
 // React components with JSX syntax used in this example
 
 function MyGenericInput(props) {
-    const className = `border rounded px-2 py-1 ${props.className || ''}`
-    return <input {...props} className={className} />
+  const className = `border rounded px-2 py-1 ${props.className || ""}`;
+  return <input {...props} className={className} />;
 }
 
 function MySlightlyModifiedInput(props) {
-    return (
-        <MyGenericInput
-            {...props}
-            className="p-3" // ← Only want to change some padding
-        />
-    )
+  return (
+    <MyGenericInput
+      {...props}
+      className="p-3" // ← Only want to change some padding
+    />
+  );
 }
 ```
 
@@ -26,9 +26,9 @@ This is where tailwind-merge comes in.
 
 ```jsx
 function MyGenericInput(props) {
-    // ↓ Now `props.className` can override conflicting classes
-    const className = twMerge('border rounded px-2 py-1', props.className)
-    return <input {...props} className={className} />
+  // ↓ Now `props.className` can override conflicting classes
+  const className = twMerge("border rounded px-2 py-1", props.className);
+  return <input {...props} className={className} />;
 }
 ```
 

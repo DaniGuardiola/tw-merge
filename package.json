@@ -1,76 +1,70 @@
 {
-    "name": "tw-merge",
-    "version": "0.0.1-alpha.0",
-    "description": "Merge CSS utility classes without style conflicts - small and zero config",
-    "keywords": [
-        "tailwindcss",
-        "tailwind",
-        "css",
-        "classes",
-        "className",
-        "classList",
-        "merge",
-        "conflict",
-        "override",
-        "utility"
-    ],
-    "homepage": "https://github.com/compi-ui/tw-merge",
-    "bugs": {
-        "url": "https://github.com/compi-ui/tw-merge/issues"
-    },
-    "license": "MIT",
-    "author": "Dani Guardiola",
-    "files": [
-        "dist",
-        "src"
-    ],
-    "source": "src/index.ts",
-    "exports": {
-        "types": "./dist/index.d.ts",
-        "require": "./dist/index.js",
-        "import": "./dist/tw-merge.mjs",
-        "default": "./dist/tw-merge.mjs"
-    },
-    "module": "dist/tw-merge.mjs",
-    "main": "dist/index.js",
+  "name": "tw-merge",
+  "version": "0.0.1-alpha.0",
+  "description": "Merge CSS utility classes without style conflicts - small and zero config",
+  "keywords": [
+    "tailwindcss",
+    "tailwind",
+    "css",
+    "classes",
+    "className",
+    "classList",
+    "merge",
+    "conflict",
+    "override",
+    "utility"
+  ],
+  "homepage": "https://github.com/compi-ui/tw-merge",
+  "bugs": {
+    "url": "https://github.com/compi-ui/tw-merge/issues"
+  },
+  "license": "MIT",
+  "author": "Dani Guardiola",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "source": "src/index.ts",
+  "exports": {
     "types": "./dist/index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/compi-ui/tw-merge.git"
-    },
-    "sideEffects": false,
-    "scripts": {
-        "build": "dts build",
-        "test": "dts test",
-        "test:exports": "node scripts/test-built-package-exports.js && node scripts/test-built-package-exports.mjs",
-        "lint": "eslint --max-warnings 0 '**'",
-        "size": "size-limit",
-        "version:local": "zx scripts/update-readme.js && yarn version && git push --follow-tags && open https://github.com/dcastil/tailwind-merge/releases",
-        "gen-tailwind-rules": "tsx scripts/gen-tailwind-rules.ts"
-    },
-    "devDependencies": {
-        "@size-limit/preset-small-lib": "^8.2.4",
-        "@types/jest": "^29.5.0",
-        "@typescript-eslint/eslint-plugin": "^5.57.0",
-        "@typescript-eslint/parser": "^5.57.0",
-        "dts-cli": "^1.6.3",
-        "eslint": "^8.37.0",
-        "eslint-plugin-import": "^2.27.5",
-        "eslint-plugin-jest": "^27.2.1",
-        "fp-ts": "^2.13.1",
-        "globby": "^11.1.0",
-        "prettier": "^2.8.7",
-        "size-limit": "^8.2.4",
-        "ts-jest": "^29.0.5",
-        "ts-toolbelt": "^9.6.0",
-        "tsx": "^3.12.7",
-        "typescript": "^5.0.3",
-        "zx": "^7.2.1"
-    },
-    "publishConfig": {
-        "provenance": true
-    },
-    "dependencies": {
-        "tw-merge": "^0.0.1-alpha.0-dev.a435ef618c6dca77fdfea295968cca89ec10002a"
-    }
+    "require": "./dist/index.js",
+    "import": "./dist/tw-merge.mjs",
+    "default": "./dist/tw-merge.mjs"
+  },
+  "module": "dist/tw-merge.mjs",
+  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/compi-ui/tw-merge.git"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "dts build",
+    "test": "dts test",
+    "test:exports": "node scripts/test-built-package-exports.js && node scripts/test-built-package-exports.mjs",
+    "lint": "eslint --max-warnings 0 '**'",
+    "size": "size-limit",
+    "gen-tailwind-rules": "tsx scripts/gen-tailwind-rules.ts"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^8.2.4",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "dts-cli": "^1.6.3",
+    "eslint": "^8.37.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.1",
+    "globby": "^11.1.0",
+    "prettier": "^2.8.7",
+    "size-limit": "^8.2.4",
+    "ts-jest": "^29.0.5",
+    "ts-toolbelt": "^9.6.0",
+    "tsx": "^3.12.7",
+    "typescript": "^5.0.3"
+  },
+  "publishConfig": {
+    "provenance": true
+  }
 }

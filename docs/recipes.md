@@ -12,21 +12,21 @@ First, check whether your particular theme scale is included in tailwind-merge's
 
 ```js
 const customTwMerge = extendTailwindMerge({
-    theme: {
-        // The `boxShadow` key isn't actually supported
-        boxShadow: [{ shadow: ['100', '200', '300'] }],
-    },
-})
+  theme: {
+    // The `boxShadow` key isn't actually supported
+    boxShadow: [{ shadow: ["100", "200", "300"] }],
+  },
+});
 ```
 
 In the case of the `boxShadow` scale, tailwind-merge doesn't include it in the theme object. Instead, we need to check out the [default config of tailwind-merge](../src/lib/default-config.ts) and search for the class group ID of the box shadow scale. After a quick search we find that tailwind-merge is using the key `shadow` for that group. We can add our custom classes to that group like this:
 
 ```js
 const customTwMerge = extendTailwindMerge({
-    classGroups: {
-        shadow: [{ shadow: ['100', '200', '300'] }],
-    },
-})
+  classGroups: {
+    shadow: [{ shadow: ["100", "200", "300"] }],
+  },
+});
 ```
 
 Note that by using `extendTailwindMerge` we're only adding our custom classes to the existing ones in the config, so `twMerge('shadow-200 shadow-lg')` will return the string `shadow-lg`. In most cases that's fine because you won't use that class in your project.
@@ -35,10 +35,10 @@ If you expect classes like `shadow-lg` to be input in `twMerge` and don't want t
 
 ```js
 const customTwMerge = createTailwindMerge(() => {
-    const config = getDefaultConfig()
-    config.classGroups.shadow = [{ shadow: ['100', '200', '300'] }]
-    return config
-})
+  const config = getDefaultConfig();
+  config.classGroups.shadow = [{ shadow: ["100", "200", "300"] }];
+  return config;
+});
 ```
 
 ## Extracting classes with Tailwind's [`@apply`](https://tailwindcss.com/docs/reusing-styles#extracting-classes-with-apply)
@@ -47,7 +47,7 @@ const customTwMerge = createTailwindMerge(() => {
 >
 > ```css
 > .btn-primary {
->     @apply py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700;
+>   @apply py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700;
 > }
 > ```
 
@@ -60,10 +60,16 @@ Instead of creating custom CSS classes, I recommend keeping the collection of Ta
 ```jsx
 // React components with JSX syntax used in this example
 
-const BTN_PRIMARY_CLASSNAMES = 'py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700'
+const BTN_PRIMARY_CLASSNAMES =
+  "py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700";
 
 function ButtonPrimary(props) {
-    return <button {...props} className={twMerge(BTN_PRIMARY_CLASSNAMES, props.className)} />
+  return (
+    <button
+      {...props}
+      className={twMerge(BTN_PRIMARY_CLASSNAMES, props.className)}
+    />
+  );
 }
 ```
 
@@ -75,8 +81,8 @@ You can wrap `twMerge` in another function which can modify the inputs and/or ou
 
 ```js
 function customTwMerge(...inputs) {
-    const modifiedInputs = modifyInputs(inputs)
-    return twMerge(modifiedInputs)
+  const modifiedInputs = modifyInputs(inputs);
+  return twMerge(modifiedInputs);
 }
 ```
 

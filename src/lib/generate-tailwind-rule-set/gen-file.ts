@@ -1,156 +1,156 @@
-import { CONSTANTS, TOP_CONFLICT_RULE } from './data'
-import { GenerationState } from './generation-state'
-import { GenerateTailwindRuleSetOptions } from './types'
+import { CONSTANTS, TOP_CONFLICT_RULE } from "./data";
+import { GenerationState } from "./generation-state";
+import { GenerateTailwindRuleSetOptions } from "./types";
 
 function orderByPriority(_targets: string[]): string[] {
-    const targets = [..._targets]
-    let seenTargets = []
-    let i = 0
-    while (i < targets.length) {
-        const target = targets[i] as string
-        const seenIndex = seenTargets.findIndex((t) => target.startsWith(t))
-        if (seenIndex >= 0) {
-            const [t] = targets.splice(i, 1)
-            targets.splice(seenIndex, 0, t as string)
-            return orderByPriority(targets)
-        }
-        seenTargets.push(target)
-        i++
-        continue
+  const targets = [..._targets];
+  let seenTargets = [];
+  let i = 0;
+  while (i < targets.length) {
+    const target = targets[i] as string;
+    const seenIndex = seenTargets.findIndex((t) => target.startsWith(t));
+    if (seenIndex >= 0) {
+      const [t] = targets.splice(i, 1);
+      targets.splice(seenIndex, 0, t as string);
+      return orderByPriority(targets);
     }
-    return targets
+    seenTargets.push(target);
+    i++;
+    continue;
+  }
+  return targets;
 }
 
 function orderSimpleTargets(targets: string[]) {
-    return orderByPriority(targets.sort())
+  return orderByPriority(targets.sort());
 }
 
 function objectFitPositionToConstantName(value: string) {
-    return {
-        fit: 'OBJECT_FIT',
-        position: 'BG_AND_OBJECT_POSITION',
-    }[value]
+  return {
+    fit: "OBJECT_FIT",
+    position: "BG_AND_OBJECT_POSITION",
+  }[value];
 }
 
 export function generateFile(
-    state: GenerationState,
-    {
-        importPath = 'merge-utility',
-        exportName = 'tailwindRuleSet',
-    }: GenerateTailwindRuleSetOptions,
+  state: GenerationState,
+  {
+    importPath = "merge-utility",
+    exportName = "tailwindRuleSet",
+  }: GenerateTailwindRuleSetOptions
 ) {
-    let file = ''
+  let file = "";
 
-    // imports
-    file += 'import {\n  RuleSet,\n  '
-    file += state.imports.join(',\n  ')
-    file += `\n} from '${importPath}'\n`
+  // imports
+  file += "import {\n  RuleSet,\n  ";
+  file += state.imports.join(",\n  ");
+  file += `\n} from '${importPath}'\n`;
 
-    // constants
-    state.constants.forEach((constant) => {
-        file += `\nconst ${constant} = "${CONSTANTS[constant]}"`
-    })
-    if (state.constants.length > 0) file += '\n'
+  // constants
+  state.constants.forEach((constant) => {
+    file += `\nconst ${constant} = "${CONSTANTS[constant]}"`;
+  });
+  if (state.constants.length > 0) file += "\n";
 
-    // header
-    file += `\nexport const ${exportName}: RuleSet = [`
+  // header
+  file += `\nexport const ${exportName}: RuleSet = [`;
 
-    // top conflict rules
-    if (state.topConflictRule.length > 0) {
-        file += `\n  conflictRule({\n`
-        state.topConflictRule.forEach((rule) => {
-            file += `    '${rule}': '${TOP_CONFLICT_RULE[rule]}',\n`
-        })
-        file += `  }),`
-    }
+  // top conflict rules
+  if (state.topConflictRule.length > 0) {
+    file += `\n  conflictRule({\n`;
+    state.topConflictRule.forEach((rule) => {
+      file += `    '${rule}': '${TOP_CONFLICT_RULE[rule]}',\n`;
+    });
+    file += `  }),`;
+  }
 
-    // flex direction wrap unique rules
-    // TODO
+  // flex direction wrap unique rules
+  // TODO
 
-    // flex basis grow shrink conflict rule
-    // TODO
+  // flex basis grow shrink conflict rule
+  // TODO
 
-    // text align size unique rules
-    // TODO
+  // text align size unique rules
+  // TODO
 
-    // bg unique rules
-    // TODO
+  // bg unique rules
+  // TODO
 
-    // scroll unique rules
-    // TODO
+  // scroll unique rules
+  // TODO
 
-    // top unique rules
-    if (state.topUniqueRules.length > 0) {
-        file += '\n  ...uniqueRules(['
-        state.topUniqueRules.forEach((rule) => {
-            file += `\n    ${rule},`
-        })
-        file += '\n  ]),'
-    }
+  // top unique rules
+  if (state.topUniqueRules.length > 0) {
+    file += "\n  ...uniqueRules([";
+    state.topUniqueRules.forEach((rule) => {
+      file += `\n    ${rule},`;
+    });
+    file += "\n  ]),";
+  }
 
-    // align content unique rule
-    // TODO
+  // align content unique rule
+  // TODO
 
-    // list style position unique rule
-    // TODO
+  // list style position unique rule
+  // TODO
 
-    // text decoration style unique rule
-    // TODO
+  // text decoration style unique rule
+  // TODO
 
-    // border style unique rule
-    // TODO
+  // border style unique rule
+  // TODO
 
-    // divide style unique rule
-    // TODO
+  // divide style unique rule
+  // TODO
 
-    // outline style unique rule
-    // TODO
+  // outline style unique rule
+  // TODO
 
-    // shadow unique rule
-    // TODO
+  // shadow unique rule
+  // TODO
 
-    // font weight unique rule
-    // TODO
+  // font weight unique rule
+  // TODO
 
-    // top simple rule
-    if (state.topSimpleRule.length > 0) {
-        file += '\n  simpleRule('
-        const targets = orderSimpleTargets(state.topSimpleRule)
-        file += `\n    '${targets.join('|')}'`
-        file += '\n  ),'
-    }
+  // top simple rule
+  if (state.topSimpleRule.length > 0) {
+    file += "\n  simpleRule(";
+    const targets = orderSimpleTargets(state.topSimpleRule);
+    file += `\n    '${targets.join("|")}'`;
+    file += "\n  ),";
+  }
 
-    // top simple rule by type
-    if (state.topSimpleRuleByType.length > 0) {
-        file += '\n  simpleRule('
-        const targets = orderSimpleTargets(state.topSimpleRuleByType)
-        file += `\n    '${targets.join('|')}'`
-        file += '\n  ),'
-    }
+  // top simple rule by type
+  if (state.topSimpleRuleByType.length > 0) {
+    file += "\n  simpleRule(";
+    const targets = orderSimpleTargets(state.topSimpleRuleByType);
+    file += `\n    '${targets.join("|")}'`;
+    file += "\n  ),";
+  }
 
-    // border cardinal rule
-    // TODO
+  // border cardinal rule
+  // TODO
 
-    // xy cardinal rules
-    if (state.xyCardinalRules.length > 0) {
-        file += `\n  ...cardinalRules('${state.xyCardinalRules.join('|')}'),`
-    }
+  // xy cardinal rules
+  if (state.xyCardinalRules.length > 0) {
+    file += `\n  ...cardinalRules('${state.xyCardinalRules.join("|")}'),`;
+  }
 
-    // trbl cardinal rules
-    // TODO
+  // trbl cardinal rules
+  // TODO
 
-    // object fit position unique rules
-    if (state.objectFitPositionUniqueRules.length > 0) {
-        file += `\n  ...uniqueRules([${state.objectFitPositionUniqueRules
-            .map(objectFitPositionToConstantName)
-            .join(', ')}], { prefix: 'object' }),`
-    }
+  // object fit position unique rules
+  if (state.objectFitPositionUniqueRules.length > 0) {
+    file += `\n  ...uniqueRules([${state.objectFitPositionUniqueRules
+      .map(objectFitPositionToConstantName)
+      .join(", ")}], { prefix: 'object' }),`;
+  }
 
-    // arbitrary rule
-    if (state.arbitraryRule) file += '\n  arbitraryRule(),'
+  // arbitrary rule
+  if (state.arbitraryRule) file += "\n  arbitraryRule(),";
 
-    // footer
-    file += '\n]\n'
+  // footer
+  file += "\n]\n";
 
-    return file
+  return file;
 }

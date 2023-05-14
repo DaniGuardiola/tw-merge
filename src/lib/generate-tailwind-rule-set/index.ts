@@ -1,2 +1,2 @@
-export { generateTailwindRuleSet } from './gen'
-export type { TailwindRules, GenerateTailwindRuleSetOptions } from './types'
+export { generateTailwindRuleSet } from "./gen";
+export type { TailwindRules, GenerateTailwindRuleSetOptions } from "./types";

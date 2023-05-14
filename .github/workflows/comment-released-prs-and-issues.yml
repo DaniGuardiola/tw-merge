@@ -1,17 +1,17 @@
 name: Comment released PRs and issues
 
 on:
-    release:
-        types: [published]
+  release:
+    types: [published]
 
 jobs:
-    release:
-        runs-on: ubuntu-latest
-        permissions:
-            issues: write
-            pull-requests: write
-        steps:
-            - uses: apexskier/github-release-commenter@v1
-              with:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  comment-template: This was addressed in release {release_link}.
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: apexskier/github-release-commenter@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          comment-template: This was addressed in release {release_link}.
