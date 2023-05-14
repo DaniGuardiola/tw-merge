@@ -27,8 +27,7 @@ const FLEX_WRAP = "wrap|wrap-reverse|nowrap";
 const ALIGN_CONTENT =
   "normal|center|start|end|between|around|evenly|baseline|stretch";
 
-const FONT_AND_SHADOW_SIZE =
-  "xs|sm|base|md|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl|inner|none";
+const FONT_AND_SHADOW_SIZE = "xs|sm|base|md|lg|xl|[\\d.]+xl|inner|none";
 const FONT_SMOOTHING = "antialiased|subpixel-antialiased";
 const FONT_STYLE = "italic|not-italic";
 const FONT_WEIGHT =

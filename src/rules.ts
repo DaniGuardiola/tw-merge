@@ -8,8 +8,8 @@ export type Handler<T = any> = (
 export type Rule = [string, Handler];
 export type RuleSet = Rule[];
 
-export const TRAILING_SLASH_REGEXP = "(?:\\/[0-9]+)?";
-export const VALUE_REGEXP = `(?:-(?<value>.+?)${TRAILING_SLASH_REGEXP})?`;
+export const TRAILING_SLASH_REGEXP = "(?:\\/\\d+)?";
+export const VALUE_REGEXP = `(?:-(?<v>.+?)${TRAILING_SLASH_REGEXP})?`;
 
 // simple rule
 // -----------
@@ -19,7 +19,7 @@ export type SimpleHandlerOptions = { byType?: boolean };
 export function createSimpleHandler({ byType }: SimpleHandlerOptions = {}) {
   const simpleHandler: Handler<
     Record<string, Partial<Record<"number" | "other", boolean>>>
-  > = (memory, { value, target }) => {
+  > = (memory, { v: value, t: target }) => {
     const type = byType && isNumericValue(value) ? "number" : "other";
     const mem = (memory[target!] ??= {});
 
@@ -39,7 +39,7 @@ export function simpleRule(
   target: string,
   { byType }: SimpleRuleOptions = {}
 ): Rule {
-  const regExp = `(?<target>${target})${VALUE_REGEXP}$`;
+  const regExp = `(?<t>${target})${VALUE_REGEXP}$`;
   return [regExp, createSimpleHandler({ byType })];
 }
 
@@ -74,20 +74,24 @@ export function createCardinalHandler({ byType }: CardinalHandlerOptions = {}) {
     Partial<Record<Direction, Partial<Record<"number" | "other", boolean>>>> & {
       _?: Partial<Record<"number" | "other", Set<string>>>;
     }
-  > = (memory, { value, dir = "" }) => {
+  > = (memory, { v: value, d: direction = "" }) => {
     const type = byType && isNumericValue(value) ? "number" : "other";
-    const mem = (memory[dir] ??= {});
+    const mem = (memory[direction] ??= {});
 
     // seen before
     if (mem[type]) return false;
 
     // apply override
     const memOverriders = ((memory._ ??= {})[type] ??= new Set());
-    if (CARDINAL_OVERRIDES[dir]?.split(",").some((d) => memOverriders.has(d)))
+    if (
+      CARDINAL_OVERRIDES[direction]
+        ?.split(",")
+        .some((dir) => memOverriders.has(dir))
+    )
       return false;
 
     // remember overrider
-    memOverriders.add(dir);
+    memOverriders.add(direction);
 
     // never seen
     mem[type] = true;
@@ -111,7 +115,7 @@ export function cardinalRule(
 ): Rule {
   const _target = `${target}(?:${
     dash ? "-" : ""
-  }(?<dir>${CARDINAL_DIRECTIONS}))?`;
+  }(?<d>${CARDINAL_DIRECTIONS}))?`;
   const regExp = `${_target}${VALUE_REGEXP}$`;
   return [regExp, createCardinalHandler({ byType })];
 }
@@ -157,7 +161,7 @@ export function uniqueRule(targets: (string | string[])[]): Rule {
 export function createArbitraryHandler() {
   const arbitraryHandler: Handler<Record<string, { done?: boolean }>> = (
     memory,
-    { property }
+    { p: property }
   ) => {
     const mem = (memory[property!] ??= {});
 
@@ -172,7 +176,7 @@ export function createArbitraryHandler() {
 }
 
 export function arbitraryRule(): Rule {
-  return [`\\[(?<property>.+?):(?<value>.*)\\]$`, createArbitraryHandler()];
+  return [`\\[(?<p>.+?):.*\\]$`, createArbitraryHandler()];
 }
 
 // conflict rule
@@ -191,7 +195,7 @@ export function createConflictHandler(targets: ConflictRuleTargets) {
 
   const conflictHandler: Handler<Record<string, boolean>> = (
     memory,
-    { utility }
+    { u: utility }
   ) => {
     // is overridable utility and overriding utility has been seen
     const skipClass = Boolean(
@@ -214,7 +218,7 @@ export function conflictRule(targets: ConflictRuleTargets): Rule {
   const overridingUtilities = Object.keys(targets);
   const overridableUtilities = Object.values(targets).join("|").split("|");
   const matchingClasses = [...overridingUtilities, ...overridableUtilities];
-  const utility = `(?<utility>${matchingClasses.join("|")})`;
+  const utility = `(?<u>${matchingClasses.join("|")})`;
   const regExp = `${utility}${VALUE_REGEXP}$`;
   return [regExp, createConflictHandler(targets)];
 }
