@@ -8,8 +8,8 @@ export type Handler<T = any> = (
 export type Rule = [string, Handler];
 export type RuleSet = Rule[];
 
-export const TRAILING_SLASH_REGEXP = "(?:\\/\\d+)?";
-export const VALUE_REGEXP = `(?:-(?<v>.+?)${TRAILING_SLASH_REGEXP})?`;
+export const TRAILING_SLASH_REGEXP = "(\\/\\d+)?";
+export const VALUE_REGEXP = `(-(?<v>.+?)${TRAILING_SLASH_REGEXP})?`;
 
 // simple rule
 // -----------
@@ -113,9 +113,7 @@ export function cardinalRule(
   target: string,
   { dash = true, byType }: CardinalRuleOptions = {}
 ): Rule {
-  const _target = `${target}(?:${
-    dash ? "-" : ""
-  }(?<d>${CARDINAL_DIRECTIONS}))?`;
+  const _target = `${target}(${dash ? "-" : ""}(?<d>${CARDINAL_DIRECTIONS}))?`;
   const regExp = `${_target}${VALUE_REGEXP}$`;
   return [regExp, createCardinalHandler({ byType })];
 }
