@@ -8,7 +8,6 @@ export type Handler<T = any> = (
 export type Rule = [string, Handler];
 export type RuleSet = Rule[];
 
-export const CONTEXT_REGEXP = "(?<ctx>.*%s!?|!?)?-?%p";
 export const TRAILING_SLASH_REGEXP = "(?:\\/[0-9]+)?";
 export const VALUE_REGEXP = `(?:-(?<value>.+?)${TRAILING_SLASH_REGEXP})?`;
 
@@ -40,7 +39,7 @@ export function simpleRule(
   target: string,
   { byType }: SimpleRuleOptions = {}
 ): Rule {
-  const regExp = `^${CONTEXT_REGEXP}(?<target>${target})${VALUE_REGEXP}$`;
+  const regExp = `(?<target>${target})${VALUE_REGEXP}$`;
   return [regExp, createSimpleHandler({ byType })];
 }
 
@@ -75,24 +74,20 @@ export function createCardinalHandler({ byType }: CardinalHandlerOptions = {}) {
     Partial<Record<Direction, Partial<Record<"number" | "other", boolean>>>> & {
       _?: Partial<Record<"number" | "other", Set<string>>>;
     }
-  > = (memory, { value, direction = "" }) => {
+  > = (memory, { value, dir = "" }) => {
     const type = byType && isNumericValue(value) ? "number" : "other";
-    const mem = (memory[direction] ??= {});
+    const mem = (memory[dir] ??= {});
 
     // seen before
     if (mem[type]) return false;
 
     // apply override
     const memOverriders = ((memory._ ??= {})[type] ??= new Set());
-    if (
-      CARDINAL_OVERRIDES[direction]
-        ?.split(",")
-        .some((dir) => memOverriders.has(dir))
-    )
+    if (CARDINAL_OVERRIDES[dir]?.split(",").some((d) => memOverriders.has(d)))
       return false;
 
     // remember overrider
-    memOverriders.add(direction);
+    memOverriders.add(dir);
 
     // never seen
     mem[type] = true;
@@ -116,8 +111,8 @@ export function cardinalRule(
 ): Rule {
   const _target = `${target}(?:${
     dash ? "-" : ""
-  }(?<direction>${CARDINAL_DIRECTIONS}))?`;
-  const regExp = `^${CONTEXT_REGEXP}${_target}${VALUE_REGEXP}$`;
+  }(?<dir>${CARDINAL_DIRECTIONS}))?`;
+  const regExp = `${_target}${VALUE_REGEXP}$`;
   return [regExp, createCardinalHandler({ byType })];
 }
 
@@ -147,7 +142,7 @@ export function uniqueRule(
   const body = def
     ? `(?:${prefix}|${_prefix}${utility})`
     : `${_prefix}${utility}`;
-  const regExp = `^${CONTEXT_REGEXP}${body}$`;
+  const regExp = `${body}$`;
   return [regExp, createUniqueHandler()];
 }
 
@@ -177,10 +172,7 @@ export function createArbitraryHandler() {
 }
 
 export function arbitraryRule(): Rule {
-  return [
-    `^${CONTEXT_REGEXP}\\[(?<property>.+?):(?<value>.*)\\]$`,
-    createArbitraryHandler(),
-  ];
+  return [`\\[(?<property>.+?):(?<value>.*)\\]$`, createArbitraryHandler()];
 }
 
 // conflict rule
@@ -223,6 +215,6 @@ export function conflictRule(targets: ConflictRuleTargets): Rule {
   const overridableUtilities = Object.values(targets).join("|").split("|");
   const matchingClasses = [...overridingUtilities, ...overridableUtilities];
   const utility = `(?<utility>${matchingClasses.join("|")})`;
-  const regExp = `^${CONTEXT_REGEXP}${utility}${VALUE_REGEXP}$`;
+  const regExp = `${utility}${VALUE_REGEXP}$`;
   return [regExp, createConflictHandler(targets)];
 }

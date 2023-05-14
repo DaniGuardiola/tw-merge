@@ -11,6 +11,8 @@ export type CreateMergeConfig = {
   prefix?: string;
 };
 
+export const CONTEXT_REGEXP = "(?<ctx>.*%s!?|!?)?-?%p";
+
 export function createMerge(
   ruleSet: RuleSet,
   { cacheSize = 500, separator = ":", prefix }: CreateMergeConfig = {}
@@ -21,9 +23,9 @@ export function createMerge(
     ([regExp, handler]) =>
       [
         new RegExp(
-          regExp
-            .replace("%s", separator)
-            .replace("%p", prefix ? `${prefix}-` : "")
+          `^(?<ctx>.*${separator}!?|!?)?-?${
+            prefix ? `${prefix}-` : ""
+          }${regExp}`
         ),
         handler,
       ] as ParsedRule
