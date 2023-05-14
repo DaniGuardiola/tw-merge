@@ -53,7 +53,6 @@ export type CardinalHandlerOptions = {
 
 type Direction = string;
 
-const CARDINAL_DIRECTIONS = "t|r|b|l|tl|tr|br|bl|x|y|s|e|ss|se|es|ee";
 const CARDINAL_OVERRIDES: Record<string, string> = {
   t: ",y,tl,tr",
   r: ",x,tr,br",
@@ -68,11 +67,8 @@ const CARDINAL_OVERRIDES: Record<string, string> = {
   es: ",e,s",
   ee: ",e,s",
 };
-const OVERRIDER_UTILITIES = new Set(
-  Object.values(CARDINAL_OVERRIDES)
-    .map((x) => x.split(","))
-    .flat()
-);
+const CARDINAL_DIRECTIONS =
+  Object.keys(CARDINAL_OVERRIDES).join("|") + "|tl|tr|br|bl";
 
 export function createCardinalHandler({ byType }: CardinalHandlerOptions = {}) {
   const cardinalHandler: Handler<
@@ -91,12 +87,12 @@ export function createCardinalHandler({ byType }: CardinalHandlerOptions = {}) {
     if (
       CARDINAL_OVERRIDES[direction]
         ?.split(",")
-        .some(memOverriders.has.bind(memOverriders))
+        .some((dir) => memOverriders.has(dir))
     )
       return false;
 
     // remember overrider
-    if (OVERRIDER_UTILITIES.has(direction)) memOverriders.add(direction);
+    memOverriders.add(direction);
 
     // never seen
     mem[type] = true;
