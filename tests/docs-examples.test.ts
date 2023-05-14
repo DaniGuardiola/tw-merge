@@ -5,7 +5,7 @@ import globby from "globby";
 import { twMerge } from "../src";
 
 const twMergeExampleRegex =
-  /twMerge\((?<arguments>[\w\s\-:[\]#(),!&\n'"]+?)\)(?!.*(?<!\/\/.*)')\s*\n?\s*\/\/\s*→\s*['"](?<result>.+)['"]/g;
+  /twMerge\((?<arguments>[\w\s\-:[\]#(),!&\n'"]+?)\)(?!.*(?<!\/\/.*)');?\s*\n?\s*\/\/\s*→\s*['"](?<result>.+)['"]/g;
 
 test("docs examples", () => {
   expect.assertions(23);
