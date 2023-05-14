@@ -3,7 +3,7 @@ import { isNumericValue } from "./lib/utils";
 export type Handler<T = any> = (
   memory: T,
   matches: NonNullable<RegExpMatchArray["groups"]>
-) => boolean | "continue"; // keep class | continue to next rule
+) => boolean | "c"; // keep class | continue to next rule
 
 export type Rule = [string, Handler];
 export type RuleSet = Rule[];
@@ -204,7 +204,7 @@ export function createConflictHandler(targets: ConflictRuleTargets) {
     if (utility! in targets) memory[utility!] = true;
 
     // continue evaluating other rules
-    return "continue";
+    return "c";
   };
 
   return conflictHandler;

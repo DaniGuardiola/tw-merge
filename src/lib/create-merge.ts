@@ -62,7 +62,7 @@ export function createMerge(
 
           const result = handler(memory, groups!);
           const keepClass = result === true;
-          const continueToNextRule = result === "continue";
+          const continueToNextRule = result === "c";
 
           if (keepClass) outputClasses.unshift(currentClass);
 
