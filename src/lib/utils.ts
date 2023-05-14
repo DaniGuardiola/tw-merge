@@ -1,7 +1,5 @@
-import { EMPTY, MatchValue } from "./shared";
-
-export function isNumericValue(value: MatchValue) {
-  if (value === EMPTY) return true;
+export function isNumericValue(value?: string) {
+  if (!value) return true;
   const arbitraryValue = value.match(/^\[(.*)\]$/)?.[1];
   return !isNaN(parseInt(arbitraryValue ?? value));
 }
@@ -15,11 +13,8 @@ function sortContextSection(section: string[], separator: string) {
     .join(separator);
 }
 
-export function normalizeContext(
-  context: string | typeof EMPTY,
-  separator: string
-) {
-  if (context === EMPTY) return context;
+export function normalizeContext(context: string, separator: string) {
+  if (!context) return context;
   const important = context.endsWith("!");
   const variants = context.replace(/:!?$/, "").split(separator);
   let section: string[] = [];

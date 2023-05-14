@@ -1,17 +1,14 @@
-import { EMPTY, MatchContext, MatchValue } from "./lib/shared";
 import { isNumericValue } from "./lib/utils";
 
-export type RuleMemory<T = any> = Record<string | symbol, T>;
-
 export type Handler<T = any> = (
-  memory: RuleMemory<T>,
-  data: { context: MatchContext; value: MatchValue; match: RegExpMatchArray }
+  memory: T,
+  matches: NonNullable<RegExpMatchArray["groups"]>
 ) => boolean | "continue"; // keep class | continue to next rule
 
 export type Rule = [string, Handler];
 export type RuleSet = Rule[];
 
-export const CONTEXT_REGEXP = "(?<context>.*%SEPARATOR%!?|!?)?-?%PREFIX%";
+export const CONTEXT_REGEXP = "(?<ctx>.*%s!?|!?)?-?%p";
 export const TRAILING_SLASH_REGEXP = "(?:\\/[0-9]+)?";
 export const VALUE_REGEXP = `(?:-(?<value>.+?)${TRAILING_SLASH_REGEXP})?`;
 
@@ -23,19 +20,15 @@ export type SimpleHandlerOptions = { byType?: boolean };
 export function createSimpleHandler({ byType }: SimpleHandlerOptions = {}) {
   const simpleHandler: Handler<
     Record<string, Partial<Record<"number" | "other", boolean>>>
-  > = (memory, { context, value, match }) => {
-    const target = match.groups?.target!;
+  > = (memory, { value, target }) => {
     const type = byType && isNumericValue(value) ? "number" : "other";
-    memory[context] ??= {};
-    memory[context]![target] ??= {};
-    const mem = memory[context]![target]!;
+    const mem = (memory[target!] ??= {});
 
     // seen before
     if (mem[type]) return false;
 
     // never seen
-    mem[type] = true;
-    return true;
+    return (mem[type] = true);
   };
 
   return simpleHandler;
@@ -58,24 +51,22 @@ export type CardinalHandlerOptions = {
   byType?: boolean;
 };
 
-type Direction = string | typeof EMPTY;
+type Direction = string;
 
 const CARDINAL_DIRECTIONS = "t|r|b|l|tl|tr|br|bl|x|y|s|e|ss|se|es|ee";
-const CARDINAL_OVERRIDES: Partial<
-  Record<string | typeof EMPTY, (string | typeof EMPTY)[]>
-> = {
-  t: [EMPTY, "y", "tl", "tr"],
-  r: [EMPTY, "x", "tr", "br"],
-  b: [EMPTY, "y", "br", "bl"],
-  l: [EMPTY, "x", "bl", "tl"],
-  x: [EMPTY],
-  y: [EMPTY],
-  s: [EMPTY],
-  e: [EMPTY],
-  ss: [EMPTY, "e", "s"],
-  se: [EMPTY, "e", "s"],
-  es: [EMPTY, "e", "s"],
-  ee: [EMPTY, "e", "s"],
+const CARDINAL_OVERRIDES: Partial<Record<string, string[]>> = {
+  t: ["", "y", "tl", "tr"],
+  r: ["", "x", "tr", "br"],
+  b: ["", "y", "br", "bl"],
+  l: ["", "x", "bl", "tl"],
+  x: [""],
+  y: [""],
+  s: [""],
+  e: [""],
+  ss: ["", "e", "s"],
+  se: ["", "e", "s"],
+  es: ["", "e", "s"],
+  ee: ["", "e", "s"],
 };
 const OVERRIDER_UTILITIES = new Set(Object.values(CARDINAL_OVERRIDES).flat());
 
@@ -84,24 +75,19 @@ const OVERRIDERS = Symbol("overriders");
 export function createCardinalHandler({ byType }: CardinalHandlerOptions = {}) {
   const cardinalHandler: Handler<
     Partial<Record<Direction, Partial<Record<"number" | "other", boolean>>>> & {
-      [OVERRIDERS]?: Partial<
-        Record<"number" | "other", Set<string | typeof EMPTY>>
-      >;
+      [OVERRIDERS]?: Partial<Record<"number" | "other", Set<string>>>;
     }
-  > = (memory, { context, value, match }) => {
-    const direction = match.groups?.direction || EMPTY;
+  > = (memory, { value, direction = "" }) => {
     const type = byType && isNumericValue(value) ? "number" : "other";
-    memory[context] ??= {};
-    memory[context]![direction] ??= {};
-    const mem = memory[context]![direction]!;
+    memory[direction] ??= {};
+    const mem = (memory[direction] ??= {});
 
     // seen before
     if (mem[type]) return false;
 
     // apply override
-    memory[context]![OVERRIDERS] ??= {};
-    memory[context]![OVERRIDERS]![type] ??= new Set();
-    const memOverriders = memory[context]![OVERRIDERS]![type]!;
+    memory[OVERRIDERS] ??= {};
+    const memOverriders = (memory[OVERRIDERS]![type] ??= new Set());
     if (
       CARDINAL_OVERRIDES[direction]?.some(memOverriders.has.bind(memOverriders))
     )
@@ -146,10 +132,8 @@ export function cardinalRules(targets: string, options?: CardinalRuleOptions) {
 // -----------
 
 export function createUniqueHandler() {
-  const uniqueValueHandler: Handler<boolean> = (memory, { context }) => {
-    if (memory[context]) return false;
-    memory[context] = true;
-    return true;
+  const uniqueValueHandler: Handler<{ seen: boolean }> = (memory) => {
+    return memory.seen ? false : (memory.seen = true);
   };
   return uniqueValueHandler;
 }
@@ -179,13 +163,9 @@ export function uniqueRules(targets: string[], options?: UniqueRuleOptions) {
 export function createArbitraryHandler() {
   const arbitraryHandler: Handler<Record<string, { done?: boolean }>> = (
     memory,
-    { context, match }
+    { property }
   ) => {
-    const property = match.groups?.property!;
-
-    memory[context] ??= {};
-    memory[context]![property] ??= {};
-    const mem = memory[context]![property]!;
+    const mem = (memory[property!] ??= {});
 
     // seen before
     if (mem.done) return false;
@@ -221,20 +201,17 @@ export function createConflictHandler(targets: ConflictRuleTargets) {
 
   const conflictHandler: Handler<Record<string, boolean>> = (
     memory,
-    { context, match }
+    { utility }
   ) => {
-    const utility = match.groups?.utility!;
-    memory[context] ??= {};
-    const mem = memory[context]!;
-
     // is overridable utility and overriding utility has been seen
     const skipClass = Boolean(
-      utility in overridableMap && overridableMap[utility]!.some((u) => mem[u])
+      utility! in overridableMap &&
+        overridableMap[utility!]!.some((u) => memory[u])
     );
     if (skipClass) return false;
 
     // is overriding utility
-    if (utility in targets) mem[utility] = true;
+    if (utility! in targets) memory[utility!] = true;
 
     // continue evaluating other rules
     return "continue";

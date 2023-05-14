@@ -1,7 +1,6 @@
-import { Handler, RuleMemory, RuleSet } from "../rules";
+import { Handler, RuleSet } from "../rules";
 
 import { createLruCache } from "./create-lru-cache";
-import { EMPTY } from "./shared";
 import { normalizeContext } from "./utils";
 
 type ParsedRule = [RegExp, Handler];
@@ -23,8 +22,8 @@ export function createMerge(
       [
         new RegExp(
           regExp
-            .replace("%SEPARATOR%", separator)
-            .replace("%PREFIX%", prefix ? `${prefix}-` : "")
+            .replace("%s", separator)
+            .replace("%p", prefix ? `${prefix}-` : "")
         ),
         handler,
       ] as ParsedRule
@@ -34,7 +33,7 @@ export function createMerge(
     const cached = cache.get(className);
     if (cached !== undefined) return cached;
 
-    const memoryStore: unknown[] = [];
+    const memoryStore: Partial<Record<string, unknown>>[] = [];
 
     const classes = className.split(" ");
 
@@ -53,16 +52,13 @@ export function createMerge(
         // - if class matches rule, execute it
         if (match) {
           didNotMatchOrWasContinued = false;
-          const context = normalizeContext(
-            match.groups?.context || EMPTY,
-            separator
-          );
-          const value = match.groups?.value || EMPTY;
+          const groups = match.groups!;
+          const context = normalizeContext(groups?.ctx ?? "", separator);
           const handler = rule[1];
 
-          const memory = (memoryStore[ruleI] ??= {}) as RuleMemory;
+          const memory = ((memoryStore[ruleI] ??= {})[context] ??= {});
 
-          const result = handler(memory, { context, value, match });
+          const result = handler(memory, groups!);
           const keepClass = result === true;
           const continueToNextRule = result === "continue";
 
