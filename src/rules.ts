@@ -54,42 +54,44 @@ export type CardinalHandlerOptions = {
 type Direction = string;
 
 const CARDINAL_DIRECTIONS = "t|r|b|l|tl|tr|br|bl|x|y|s|e|ss|se|es|ee";
-const CARDINAL_OVERRIDES: Partial<Record<string, string[]>> = {
-  t: ["", "y", "tl", "tr"],
-  r: ["", "x", "tr", "br"],
-  b: ["", "y", "br", "bl"],
-  l: ["", "x", "bl", "tl"],
-  x: [""],
-  y: [""],
-  s: [""],
-  e: [""],
-  ss: ["", "e", "s"],
-  se: ["", "e", "s"],
-  es: ["", "e", "s"],
-  ee: ["", "e", "s"],
+const CARDINAL_OVERRIDES: Record<string, string> = {
+  t: ",y,tl,tr",
+  r: ",x,tr,br",
+  b: ",y,br,bl",
+  l: ",x,bl,tl",
+  x: "",
+  y: "",
+  s: "",
+  e: "",
+  ss: ",e,s",
+  se: ",e,s",
+  es: ",e,s",
+  ee: ",e,s",
 };
-const OVERRIDER_UTILITIES = new Set(Object.values(CARDINAL_OVERRIDES).flat());
-
-const OVERRIDERS = Symbol("overriders");
+const OVERRIDER_UTILITIES = new Set(
+  Object.values(CARDINAL_OVERRIDES)
+    .map((x) => x.split(","))
+    .flat()
+);
 
 export function createCardinalHandler({ byType }: CardinalHandlerOptions = {}) {
   const cardinalHandler: Handler<
     Partial<Record<Direction, Partial<Record<"number" | "other", boolean>>>> & {
-      [OVERRIDERS]?: Partial<Record<"number" | "other", Set<string>>>;
+      _?: Partial<Record<"number" | "other", Set<string>>>;
     }
   > = (memory, { value, direction = "" }) => {
     const type = byType && isNumericValue(value) ? "number" : "other";
-    memory[direction] ??= {};
     const mem = (memory[direction] ??= {});
 
     // seen before
     if (mem[type]) return false;
 
     // apply override
-    memory[OVERRIDERS] ??= {};
-    const memOverriders = (memory[OVERRIDERS]![type] ??= new Set());
+    const memOverriders = ((memory._ ??= {})[type] ??= new Set());
     if (
-      CARDINAL_OVERRIDES[direction]?.some(memOverriders.has.bind(memOverriders))
+      CARDINAL_OVERRIDES[direction]
+        ?.split(",")
+        .some(memOverriders.has.bind(memOverriders))
     )
       return false;
 
