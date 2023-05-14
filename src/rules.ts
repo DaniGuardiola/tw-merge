@@ -134,11 +134,20 @@ export function createUniqueHandler() {
 
 export type UniqueRuleOptions = { prefix?: string; def?: boolean };
 
-export function uniqueRule(targets: string[]): Rule {
-  const body = `(${targets
-    .map((target, i) => `(?<i${i}>${target})`)
-    .join("|")})${TRAILING_SLASH_REGEXP}`;
-  const regExp = `${body}$`;
+export function uniqueRule(targets: (string | string[])[]): Rule {
+  const regExp = `(${targets
+    .map((target, targetI) =>
+      Array.isArray(target)
+        ? target
+            .slice(1)
+            .map(
+              (subtarget, subtargetI) =>
+                `(?<i${targetI}_${subtargetI}>${`${target[0]}-(${subtarget})`})`
+            )
+        : `(?<i${targetI}>${target})`
+    )
+    .flat()
+    .join("|")})${TRAILING_SLASH_REGEXP}$`;
   return [regExp, createUniqueHandler()];
 }
 

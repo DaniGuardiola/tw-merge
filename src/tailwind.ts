@@ -98,28 +98,27 @@ export function tailwind(): RuleSet {
       TEXT_OVERFLOW,
     ]),
     uniqueRule([
-      `content-(${ALIGN_CONTENT})`,
-      `list-(${LIST_STYLE_POSITION})`,
-      `decoration-(${TEXT_DECORATION_STYLE})`,
-      `border-(${BORDER_AND_OUTLINE_STYLE})`,
-      `divide-(${BORDER_AND_OUTLINE_STYLE})`,
-      `outline|outline-(${BORDER_AND_OUTLINE_STYLE})`,
-      `shadow-(${FONT_AND_SHADOW_SIZE})`,
-      `font-(${FONT_WEIGHT})`,
-      ...[OBJECT_FIT, BG_AND_OBJECT_POSITION].map((t) => `object-(${t})`),
+      ["content", ALIGN_CONTENT],
+      ["list", LIST_STYLE_POSITION],
+      ["decoration", TEXT_DECORATION_STYLE],
+      ["border", BORDER_AND_OUTLINE_STYLE],
+      ["divide", BORDER_AND_OUTLINE_STYLE],
+      ["outline|outline", BORDER_AND_OUTLINE_STYLE],
+      ["shadow", FONT_AND_SHADOW_SIZE],
+      ["font", FONT_WEIGHT],
+      ["object", OBJECT_FIT, BG_AND_OBJECT_POSITION],
     ]),
     uniqueRule([
-      ...[
+      [
+        "scroll",
         SCROLL_BEHAVIOR,
         SCROLL_SNAP_ALIGN,
         SCROLL_SNAP_STOP,
         SCROLL_SNAP_TYPE,
-      ].map((t) => `scroll-(${t})`),
-      ...[BG_ATTACHMENT, BG_AND_OBJECT_POSITION, BG_REPEAT, BG_SIZE].map(
-        (t) => `bg-(${t})`
-      ),
-      ...[TEXT_ALIGN, FONT_AND_SHADOW_SIZE].map((t) => `text-(${t})`),
-      ...[FLEX_DIRECTION, FLEX_WRAP].map((t) => `flex-(${t})`),
+      ],
+      ["bg", BG_ATTACHMENT, BG_AND_OBJECT_POSITION, BG_REPEAT, BG_SIZE],
+      ["text", TEXT_ALIGN, FONT_AND_SHADOW_SIZE],
+      ["flex", FLEX_DIRECTION, FLEX_WRAP],
     ]),
     conflictRule({ flex: "basis|grow|shrink" }),
     // -----------------------------------------------------------------
